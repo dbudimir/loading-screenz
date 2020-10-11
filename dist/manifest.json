@@ -13,9 +13,6 @@
     "default_title": "TSRWPCX",
     "default_popup": "popup.html"
   },
-  "chrome_url_overrides": {
-    "newtab": "loading.html"
-  },
   "default_locale": "en",
   "background": {
     "scripts": ["js/background.js"],

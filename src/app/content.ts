@@ -1,4 +1,33 @@
-import loader from '../ui/loading'
+// const notOn
+
+const showLoader = async e => {
+  window.location.href
+  e.preventDefault()
+
+  const bodyElm = document.getElementsByTagName('BODY')[0]
+  const items = bodyElm.querySelectorAll('body > *')
+  const clickElm = e.currentTarget as HTMLAnchorElement
+
+  if (clickElm.tagName === 'A') {
+    //  Import react
+    await import('../ui/loading')
+      .then(loader => loader)
+      .catch(error => console.log('error'))
+
+    // Speed up video
+    document.querySelector('video').playbackRate = 2
+
+    // Clear everything
+    items.forEach(item => {
+      !item.classList.contains('fixed-elm') &&
+        (item as HTMLElement).setAttribute('style', 'display: none;')
+    })
+
+    setTimeout(() => {
+      window.location.href = clickElm.href
+    }, 4500)
+  }
+}
 
 chrome.runtime.sendMessage({}, response => {
   var checkReady = setInterval(() => {
@@ -7,32 +36,9 @@ chrome.runtime.sendMessage({}, response => {
       console.log("We're in the injected content script!")
 
       let anchors = document.querySelectorAll('a')
-      let linkList = []
-
-      // Loop
+      // Add listener to all link
       for (var i = 0; i < anchors.length; i++) {
-        //
-        let originalLink = anchors[i].href
-        linkList.push(originalLink)
-        //
-        anchors[i].removeAttribute('href')
-        anchors[i].setAttribute('name', originalLink)
-        anchors[i].setAttribute('style', 'cursor: pointer;')
-
-        anchors[i].addEventListener('click', e => {
-          e.preventDefault()
-
-          const bodyElm = document.getElementsByTagName('BODY')[0]
-          const items = bodyElm.querySelectorAll('body > *')
-
-          items.forEach(item => {
-            !item.classList.contains('fixed-elm') &&
-              (item as HTMLInputElement).setAttribute('style', 'display: none;')
-          })
-
-          console.log(e.target)
-          e.target && loader()
-        })
+        anchors[i].addEventListener('click', showLoader)
       }
     }
   })
