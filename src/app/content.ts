@@ -1,7 +1,4 @@
-// const notOn
-
 const showLoader = async e => {
-  window.location.href
   e.preventDefault()
 
   const bodyElm = document.getElementsByTagName('BODY')[0]
@@ -17,7 +14,8 @@ const showLoader = async e => {
     // Speed up video
     document.querySelector('video').playbackRate = 2
 
-    // Clear everything
+    // Clear everything fix body
+    bodyElm.setAttribute('style', 'padding: 0px')
     items.forEach(item => {
       !item.classList.contains('fixed-elm') &&
         (item as HTMLElement).setAttribute('style', 'display: none;')
@@ -25,7 +23,7 @@ const showLoader = async e => {
 
     setTimeout(() => {
       window.location.href = clickElm.href
-    }, 4500)
+    }, 4000)
   }
 }
 
