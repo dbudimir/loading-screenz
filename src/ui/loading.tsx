@@ -17,7 +17,7 @@ const Loader = () => {
 // --------------
 
 let elm = document.createElement('DIV')
-elm.classList.add('fixed-elm')
+elm.classList.add('loading-screenz-fixed-elm')
 
 ReactDOM.render(<Loader />, document.body.appendChild(elm))
 
