@@ -1,24 +1,22 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 // Components
-import Halo from './loaders/halo'
+import Halo from './loaders/halo';
 
-import '../styles/popup.css'
+import '../styles/popup.css';
 
-const Loader = () => {
-  return (
-    <>
-      <Halo />
-    </>
-  )
-}
+const Loader = () => (
+  <>
+    <Halo />
+  </>
+);
 
 // --------------
 
-let elm = document.createElement('DIV')
-elm.classList.add('loading-screenz-fixed-elm')
+const elm = document.createElement('DIV');
+elm.classList.add('loading-screenz-fixed-elm');
 
-ReactDOM.render(<Loader />, document.body.appendChild(elm))
+ReactDOM.render(<Loader />, document.body.appendChild(elm));
 
-export default Loader
+export default Loader;

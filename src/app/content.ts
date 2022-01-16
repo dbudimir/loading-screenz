@@ -8,7 +8,7 @@ const showLoader = async e => {
 
   //
   // Get the user settings
-  chrome.storage.sync.get(['frequency', 'duration'], async result => {
+  chrome.storage.sync.get(['show', 'frequency', 'duration'], async result => {
     // Timout for redirect
     const runNow =
       Math.floor(Math.random() * Math.floor(100)) < result.frequency
@@ -17,7 +17,7 @@ const showLoader = async e => {
       //
       setTimeout(() => {
         window.location.href = clickElm.href
-      }, result.duration * 1000 - 250)
+      }, result.duration * 1000)
 
       if (clickElm.tagName === 'A') {
         //  Import react
@@ -56,14 +56,20 @@ chrome.runtime.sendMessage({}, response => {
     //
     if (document.readyState === 'complete') {
       clearInterval(checkReady)
+
       console.log("We're in the injected content script!")
 
-      // Get all the link
-      let anchors = document.querySelectorAll('a')
-      // Add listener to all link
-      for (var i = 0; i < anchors.length; i++) {
-        anchors[i].addEventListener('click', showLoader)
-      }
+      console.log('build')
+
+      showLoader()
+      console.log(chrome.storage)
+
+      // // Get all the link
+      // let anchors = document.querySelectorAll('a')
+      // // Add listener to all link
+      // for (var i = 0; i < anchors.length; i++) {
+      //   anchors[i].addEventListener('click', showLoader)
+      // }
     }
   })
 })

@@ -7,6 +7,7 @@ import '../styles/popup.css'
 const Popup = () => {
   // State
   const [settings, setSettings] = useState({
+    onUrlChange: false,
     frequency: 5,
     duration: 5
   })
@@ -15,6 +16,7 @@ const Popup = () => {
     const { id, value } = e.target
 
     chrome.storage.sync.set({
+      onUrlChange: false,
       frequency: id === 'frequency' ? value : settings.frequency,
       duration: id === 'duration' ? value : settings.duration
     })
@@ -22,7 +24,11 @@ const Popup = () => {
 
   useEffect(() => {
     chrome.storage.sync.get(['frequency', 'duration'], result => {
-      setSettings({ frequency: result.frequency, duration: result.duration })
+      setSettings({
+        onUrlChange: result.onUrlChange,
+        frequency: result.frequency,
+        duration: result.duration
+      })
     })
   }, [])
 
@@ -31,6 +37,21 @@ const Popup = () => {
       <h2>tester</h2>
       <span>fun times</span>
       <hr />
+
+      <span>Show on Url Change</span>
+      <div className='checkbox-input'>
+        <input
+          type='checkbox'
+          className='check-box'
+          id='check-box'
+          onChange={e => {
+            setSettings({ ...settings, onUrlChange: !settings.onUrlChange })
+            updateSettings(e)
+          }}
+        />
+        <span className='input value'>{settings.onUrlChange}</span>
+      </div>
+
       <span>Loader Frequency</span>
       <div className='slider-input'>
         <input
@@ -44,7 +65,7 @@ const Popup = () => {
             setSettings({ ...settings, frequency: e.target.value })
             updateSettings(e)
           }}
-        ></input>
+        />
         <span className='input value'>{settings.frequency}</span>
       </div>
       <span>Loader Duration</span>
@@ -60,7 +81,7 @@ const Popup = () => {
             setSettings({ ...settings, duration: e.target.value })
             updateSettings(e)
           }}
-        ></input>
+        />
         <span className='input value'>{settings.duration}</span>
       </div>
     </div>
