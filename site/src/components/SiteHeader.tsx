@@ -16,16 +16,11 @@ const Cap = styled.header`
   padding-top: 0;
 `;
 
-const Brand = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
 const Logo = styled.a`
   .lz-logo-orb {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
+    box-shadow: 0 0 14px var(--lz-accent-glow);
   }
 
   .lz-logo-word {
@@ -45,22 +40,12 @@ const Logo = styled.a`
   }
 `;
 
-const Edition = styled.span`
-  padding-left: 42px;
-  font-size: var(--lz-text-xs);
-  color: var(--lz-page-text);
-
-  @media (max-width: 640px) {
-    display: none;
-  }
-`;
-
 const Utility = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
   align-self: flex-start;
-  margin-top: 40px;
+  margin-top: 50px;
   font-size: var(--lz-text-xs);
 
   @media (max-width: 640px) {
@@ -73,15 +58,12 @@ const Utility = styled.div`
 const SiteHeader = () => (
   <>
     <Cap className="lz-shell-cap">
-      <Brand>
-        <Logo className="lz-logo" href="#top">
-          <span className="lz-logo-orb" />
-          <span className="lz-logo-word">
-            Loading <b>Screens</b>
-          </span>
-        </Logo>
-        <Edition>Browser Extension | Version 1.1 | United States</Edition>
-      </Brand>
+      <Logo className="lz-logo" href="#top">
+        <span className="lz-logo-orb" />
+        <span className="lz-logo-word lz-logo-word--stacked">
+          Loading <b>Screenz</b>
+        </span>
+      </Logo>
       <Utility>
         <span>Free for Chrome</span>
         <InstallButton />

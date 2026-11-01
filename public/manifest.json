@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Loading Screens",
+  "name": "Loading Screenz",
   "version": "1.1.0",
   "description": "Classic video game loading screens and console startups while you browse the web.",
   "homepage_url": "https://budimir.dev",
@@ -12,7 +12,7 @@
     "128": "icons/icon128.png"
   },
   "action": {
-    "default_title": "Loading Screens",
+    "default_title": "Loading Screenz",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

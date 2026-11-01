@@ -4,6 +4,7 @@ import {
   Faq,
   FinalCta,
   Hero,
+  HowItWorks,
   InfoColumns,
   ScreenGallery,
   ShellFooter,
@@ -26,6 +27,7 @@ export default function Home() {
         <main>
           <Hero />
           <StatsTicker />
+          <HowItWorks />
           <InfoColumns />
           <ScreenGallery />
           <ControlPanel />

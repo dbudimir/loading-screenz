@@ -1,86 +1,47 @@
-:root {
-  color-scheme: light dark;
-  font-family: system-ui, sans-serif;
-  font-size: 14px;
-}
+@import '../theme/index.css';
 
-body {
-  margin: 0;
+/* Chrome sizes the popup to its content, so the page can't use the full-viewport height. */
+body.lz-page {
   width: 300px;
+  min-height: 0;
+  padding: 10px 8px 12px;
 }
 
-main {
+.lz-logo {
+  margin: 0;
+}
+
+.screen {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
+  gap: 14px;
 }
 
-h1 {
-  margin: 0;
-  font-size: 18px;
-}
-
-header p {
-  margin: 4px 0 0;
-  opacity: 0.7;
+.power-status {
+  display: block;
 }
 
 fieldset {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   border: 0;
 }
 
 fieldset:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
-.toggle {
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-weight: 600;
-}
-
-.slider,
-.select {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.slider > span,
-.select > span {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
-}
-
-output {
-  font-weight: 400;
-  opacity: 0.7;
-}
-
-select {
-  font: inherit;
-  padding: 4px;
-}
-
-.manage {
-  font: inherit;
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-
-input[type='range'] {
-  width: 100%;
-  margin: 0;
 }

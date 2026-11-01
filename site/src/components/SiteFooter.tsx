@@ -5,6 +5,10 @@ import { GITHUB_URL, INSTALL_URL } from '@/lib/site';
 
 const Stats = styled.div`
   margin-top: 14px;
+  padding-inline: 12px;
+  overflow: clip;
+  overflow-clip-margin: content-box;
+  border-radius: 999px;
 `;
 
 const Legal = styled.footer`
@@ -53,12 +57,18 @@ export const ShellFooter = () => (
     <span className="lz-logo">
       <span className="lz-logo-orb" />
       <span className="lz-logo-word">
-        Loading <b>Screens</b>
+        Loading <b>Screenz</b>
       </span>
     </span>
     <span>Best viewed at 1024x768 or higher.</span>
   </div>
 );
+
+const Disclaimer = styled.p`
+  max-width: 560px;
+  margin-top: 8px;
+  line-height: 1.6;
+`;
 
 const SiteFooter = () => (
   <Legal>
@@ -66,12 +76,13 @@ const SiteFooter = () => (
       <a href={INSTALL_URL}>Install</a>
       <a href={GITHUB_URL}>Source on GitHub</a>
       <a href={`${GITHUB_URL}/issues`}>Report a Bug</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/privacy">Privacy</a>
     </Links>
-    <p className="lz-fine">
-      ©2026 Loading Screens. Not affiliated with or endorsed by Microsoft, Sony, Nintendo, Sega, Capcom, Rockstar Games,
+    <Disclaimer className="lz-fine">
+      ©2026 Loading Screenz. Not affiliated with or endorsed by Microsoft, Sony, Nintendo, Sega, Capcom, Rockstar Games,
       or Activision. All trademarks are the property of their respective owners.
-    </p>
+    </Disclaimer>
   </Legal>
 );
 

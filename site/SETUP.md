@@ -1,4 +1,4 @@
-# Loading Screens site setup
+# Loading Screenz site setup
 
 This site was generated with `budi-kit`'s project generator (base features only) inside the extension repo, then built out as the marketing page.
 

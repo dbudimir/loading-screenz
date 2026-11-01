@@ -64,6 +64,7 @@ const Copy = styled.div`
 /* The chrome lettering washes out on the light frame, so this heading uses dark steel instead. */
 const Headline = styled.h2`
   font-size: clamp(24px, 3.6vw, 34px);
+  white-space: nowrap;
   background: linear-gradient(180deg, #5d7286 0%, #2a3a4a 50%, #101820 100%);
   background-clip: text;
   -webkit-text-stroke: 0;
@@ -129,8 +130,8 @@ const ControlPanel = () => {
         <div className="lz-shell-cap">
           <span className="lz-logo">
             <span className="lz-logo-orb" />
-            <span className="lz-logo-word">
-              Loading <b>Screens</b>
+            <span className="lz-logo-word lz-logo-word--stacked">
+              Loading <b>Screenz</b>
             </span>
           </span>
         </div>
@@ -174,7 +175,9 @@ const ControlPanel = () => {
           <span className="lz-badge lz-badge--live">Live demo</span>
         </span>
         <Headline id="controls-title" className="lz-display">
-          Your browser. Your rules.
+          Your browser.
+          <br />
+          Your rules.
         </Headline>
         <p className="lz-text">
           Total command from the toolbar. Flip the power, pick your screen, and dial in exactly how hardcore you want to

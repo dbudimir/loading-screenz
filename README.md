@@ -1,4 +1,4 @@
-# Loading Screens (loading-screenz)
+# Loading Screenz
 
 A browser extension that turns link clicks into classic video game loading screens and console startups. When you click a link, there's a chance a fullscreen loading video plays for a few seconds before the browser continues to the page.
 
@@ -30,7 +30,7 @@ Then load the `dist/` folder into your browser:
 1. Open the extensions page: `chrome://extensions`, `edge://extensions`, `brave://extensions`, or your browser's equivalent.
 2. Turn on **Developer mode**.
 3. Click **Load unpacked** and select the `dist/` folder.
-4. Pin the Loading Screens icon to the toolbar to get to the settings.
+4. Pin the Loading Screenz icon to the toolbar to get to the settings.
 
 Pages that were already open before loading the extension need a refresh before it works on them.
 
@@ -149,7 +149,7 @@ This builds into `dist/` with inline source maps and rebuilds whenever a file ch
 - **Popup, library page, or player changes:** close and reopen the popup or library page. The player reloads on every loading screen.
 - **Content script, manifest, or media changes:** click the reload icon on the extension's card in the extensions page, then refresh the tab you're testing in.
 
-To test quickly, set Frequency to 100% so every click triggers a loading screen. Content script and player logs appear in the page's DevTools console (choose the Loading Screens context in the console's context menu for the player). For the popup, right-click inside it and choose **Inspect**. The library page is a normal tab with its own DevTools, and **Application → IndexedDB → loading-screenz** shows the stored videos.
+To test quickly, set Frequency to 100% so every click triggers a loading screen. Content script and player logs appear in the page's DevTools console (choose the Loading Screenz context in the console's context menu for the player). For the popup, right-click inside it and choose **Inspect**. The library page is a normal tab with its own DevTools, and **Application → IndexedDB → loading-screenz** shows the stored videos.
 
 ### Scripts
 
@@ -161,14 +161,14 @@ To test quickly, set Frequency to 100% so every click triggers a loading screen.
 | `pnpm encode <file>` | Encode a video as a built-in loading screen (see [Adding a built-in loading screen](#adding-a-built-in-loading-screen)) |
 | `pnpm youtube <url>` | Download a YouTube video and encode it as a built-in (`--inspect` to look first) |
 | `pnpm icons` | Render `public/icons/` from the SVGs in `assets/icons/` (needs Chrome and ImageMagick) |
-| `pnpm styleguide` | Build and open the design system style guide (see `docs/design-system.md`) |
-| `pnpm zip` | Production build, zipped to `loading-screenz.zip` (without the style guide) |
+| `pnpm zip` | Production build, zipped to `loading-screenz.zip` |
+| `pnpm store-assets` | Generate the Chrome Web Store screenshots and promo tiles in `store/` (needs ffmpeg and ImageMagick) |
 
 ### Tech stack
 
 - TypeScript and React 19 for the popup and library page. The content script and player are plain DOM code.
 - [esbuild](https://esbuild.github.io) for bundling, configured in `build.mjs`. Every entry is bundled as a standalone script because content scripts can't load ES modules.
-- pnpm for packages. esbuild's install script is allowed in `pnpm-workspace.yaml`; pnpm blocks dependency install scripts unless they're approved.
+- pnpm for packages. The install scripts for esbuild and puppeteer (which downloads the Chrome used by `pnpm store-assets`) are allowed in `pnpm-workspace.yaml`; pnpm blocks dependency install scripts unless they're approved.
 
 ## Project structure
 
@@ -179,13 +179,14 @@ To test quickly, set Frequency to 100% so every click triggers a loading screen.
 ├── scripts/
 │   ├── encode.mjs          Encodes a source video into an AV1 built-in loader (15 seconds at most)
 │   ├── icons.mjs           Renders the icon PNGs from assets/icons/
+│   ├── store-assets.mjs    Generates the Chrome Web Store screenshots and promo tiles
 │   └── youtube.mjs         Downloads a YouTube video, inspects it, and runs encode.mjs
+├── store/                  Chrome Web Store screenshots and promo tiles (see docs/publishing.md)
 ├── public/                 Copied into dist/ unchanged
 │   ├── manifest.json       Extension manifest (Manifest V3)
 │   ├── popup.html          Popup page shell
 │   ├── options.html        Library page shell
 │   ├── player.html         Fullscreen player page shown inside the overlay
-│   ├── styleguide.html     Design system style guide (not shipped)
 │   ├── icons/              Toolbar and store icons
 │   └── media/              Built-in loading screen videos
 └── src/
@@ -205,7 +206,6 @@ To test quickly, set Frequency to 100% so every click triggers a loading screen.
     │   ├── tokens.css      Fonts, sizes, spacing, and bevels shared by every theme
     │   ├── themes/         One file of color and texture tokens per console theme
     │   └── components.css  The lz- components, built only from tokens
-    ├── styleguide/         Style guide page showing every component and mockups of the UI
     └── shared/
         ├── loaders.ts      Built-in loaders, the combined library, and random picking
         ├── user-videos.ts  IndexedDB storage for uploaded videos
@@ -229,6 +229,8 @@ pnpm zip
 ```
 
 This creates `loading-screenz.zip`, which you can upload in the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole) or [Microsoft Edge Add-ons](https://partner.microsoft.com/dashboard/microsoftedge). Bump `version` in `public/manifest.json` before each upload.
+
+The step-by-step store plan, with the listing text and permission justifications ready to paste, is in [docs/publishing.md](docs/publishing.md). `pnpm store-assets` regenerates the store screenshots and promo tiles in `store/`.
 
 Before publishing, keep in mind:
 

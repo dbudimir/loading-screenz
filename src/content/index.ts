@@ -7,7 +7,18 @@ const refreshSettings = () => getSettings().then(s => (settings = s));
 refreshSettings();
 onSettingsChanged(refreshSettings);
 
-let active: { overlay: Overlay; timer: number } | null = null;
+// How long the overlay waits for the page to unload after navigating before giving up and removing itself.
+const UNLOAD_TIMEOUT_MS = 5000;
+
+let active: { overlay: Overlay; timer: number; listeners: AbortController } | null = null;
+
+function dismiss() {
+  if (!active) return;
+  clearTimeout(active.timer);
+  active.listeners.abort();
+  active.overlay.remove();
+  active = null;
+}
 
 /** Returns the URL a click would navigate the current tab to, or null if it isn't a plain same-tab link navigation. */
 function getNavigationUrl(event: MouseEvent): URL | null {
@@ -39,19 +50,27 @@ window.addEventListener('click', event => {
 
   event.preventDefault();
   // Navigate when the video ends (short videos end before Duration), or at Duration if it never does.
+  let navigated = false;
   const navigate = () => {
-    clearTimeout(timer);
+    if (navigated || !active) return;
+    navigated = true;
+    clearTimeout(active.timer);
+    // Single-page apps (like Reddit) can intercept the navigation and route in-page, so the page never unloads.
+    const { signal } = active.listeners;
+    navigation.addEventListener('navigatesuccess', dismiss, { signal });
+    navigation.addEventListener('navigateerror', dismiss, { signal });
     location.assign(url.href);
+    // Covers navigations that never replace the page at all: downloads, 204 responses, a cancelled "Leave site?" prompt.
+    active.timer = window.setTimeout(dismiss, UNLOAD_TIMEOUT_MS);
   };
-  const overlay = showOverlay(navigate);
-  const timer = window.setTimeout(navigate, settings.duration * 1000);
-  active = { overlay, timer };
+  active = {
+    overlay: showOverlay(navigate),
+    timer: window.setTimeout(navigate, settings.duration * 1000),
+    listeners: new AbortController(),
+  };
 });
 
 // Pages restored from the back/forward cache would otherwise come back with the overlay still up.
 window.addEventListener('pageshow', event => {
-  if (!event.persisted || !active) return;
-  clearTimeout(active.timer);
-  active.overlay.remove();
-  active = null;
+  if (event.persisted) dismiss();
 });

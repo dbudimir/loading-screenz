@@ -37,6 +37,14 @@ const NowLoading = styled.span`
 const Headline = styled.h1`
   font-size: clamp(26px, 4.4vw, 40px);
   line-height: 1.02;
+
+  em {
+    background: linear-gradient(180deg, var(--lz-accent-bright) 0%, var(--lz-accent) 55%, var(--lz-accent-dark) 100%);
+    background-clip: text;
+    color: transparent;
+    font-style: inherit;
+    -webkit-text-stroke-color: var(--lz-accent-dark);
+  }
 `;
 
 const Pitch = styled.p`
@@ -106,11 +114,13 @@ const Hero = () => {
           <NowLoading className="lz-led">NOW LOADING: {selected.name.toUpperCase()}</NowLoading>
           <LoaderVideo id={selected.id} name={selected.name} autoPlay />
         </Monitor>
-        <Headline className="lz-display">Every click is a loading screen.</Headline>
+        <Headline className="lz-display">
+          Browsing the web <em>slower</em> than ever!
+        </Headline>
         <Pitch className="lz-text">
-          <strong className="lz-heading">Loading Screens:</strong> We've pined. We've yearned. We've stared at blank
-          white pages waiting for the web to load. No longer! The greatest boot-ups and loading screens in gaming
-          history now play right in your browser, every time you click a link. The web will never be the same.
+          <strong className="lz-heading">Every click is a loading screen...</strong> We've pined. We've yearned. We've
+          stared at blank white pages waiting for the web to load. No longer! The greatest boot-ups and loading screens
+          in gaming history now play right in your browser, every time you click a link. The web will never be the same.
         </Pitch>
         <Actions>
           <InstallButton size="large" label="Install Free for Chrome" />

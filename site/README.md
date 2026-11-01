@@ -1,6 +1,6 @@
-# Loading Screens marketing site
+# Loading Screenz marketing site
 
-The one-page promotional site for the Loading Screens browser extension. It uses the extension's Xbox theme and the early-2000s console web style, and every call to action points to installing the extension.
+The one-page promotional site for the Loading Screenz browser extension. It uses the extension's Xbox theme and the early-2000s console web style, and every call to action points to installing the extension.
 
 ## Getting started
 
@@ -10,6 +10,12 @@ pnpm dev
 ```
 
 Open [http://localhost:7700](http://localhost:7700). `pnpm dev` and `pnpm build` first copy the loading screen videos and icon from the extension (`../public/`) into `public/`, so the site always shows what the extension ships.
+
+### Dev tools
+
+Pages under `src/app/dev/` are local-only. They render in `pnpm dev` and return a 404 in production builds (the check is in `src/app/dev/layout.tsx`). Start at [localhost:7700/dev](http://localhost:7700/dev):
+
+- [/dev/styleguide](http://localhost:7700/dev/styleguide): the extension's design system, with every component and mockups of the popup and library page
 
 ## Environment variables
 

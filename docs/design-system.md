@@ -18,9 +18,9 @@ The extension's look is early-2000s console web design: the Y2K, dot-com, "Web 1
 | `src/theme/themes/<theme>.css` | One file per theme, setting the color, gradient, and texture tokens under `[data-theme='<theme>']` |
 | `src/theme/components.css` | Every component, as `lz-` prefixed classes that only use tokens |
 | `src/theme/index.css` | Imports all of the above. Pages import this one file |
-| `src/styleguide/` | The style guide page: every component in every state, plus mockups of the popup and library page |
+| `site/src/app/dev/styleguide/` | The style guide page: every component in every state, plus mockups of the popup and library page |
 
-Run `pnpm styleguide` to build and open the style guide. It's a plain HTML file with no extension APIs, so it opens straight from `dist/` without loading the extension. It's left out of the published zip.
+The style guide lives in the marketing site. Run `pnpm dev` in `site/` and open [localhost:7700/dev/styleguide](http://localhost:7700/dev/styleguide). Everything under `/dev` only exists in `next dev`; production builds return a 404.
 
 ## Components
 
@@ -85,5 +85,5 @@ Nintendo.com GameCube sites, 2001–2003. Pairs with the GameCube loader.
 
 1. **Xbox theme, components, and style guide.** Done.
 2. **Review and refine** the Xbox theme in the style guide.
-3. **Apply to the extension:** restyle the popup and library page with the components, add a `theme` setting with a picker in the popup and library page, and set `data-theme` on each page.
+3. **Apply to the extension:** the popup uses the Xbox theme (done). Still to do: restyle the library page with the components, add a `theme` setting with a picker in the popup and library page, and set `data-theme` on each page.
 4. **Add the other themes** one at a time (PlayStation 2, Dreamcast, then GameCube): a token file each, any theme-specific pieces, and a pass through the style guide.

@@ -1,21 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <!-- Simplified for the 16px and 32px toolbar icons, where the full icon's details would blur together. -->
-  <defs>
-    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.55" stop-color="#9da39f"/>
-      <stop offset="1" stop-color="#e2e5e2"/>
-    </linearGradient>
-    <radialGradient id="orb" cx="0.38" cy="0.32" r="0.7">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.2" stop-color="#d8ff8a"/>
-      <stop offset="0.55" stop-color="#8cc63f"/>
-      <stop offset="1" stop-color="#2f6410"/>
-    </radialGradient>
-  </defs>
-  <circle cx="16" cy="16" r="15.5" fill="url(#chrome)" stroke="#4f5551" stroke-width="1"/>
-  <circle cx="16" cy="16" r="12.5" fill="#05080d"/>
-  <!-- A three-quarter loading arc, starting at the top and running clockwise. -->
-  <path d="M16 6.5 A9.5 9.5 0 1 1 6.5 16" fill="none" stroke="#9be04a" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="16" cy="16" r="4.5" fill="url(#orb)"/>
+  <!-- icon.svg tuned for the 16px and 32px toolbar icons: a thicker arc and a bigger center dot,
+       so they don't thin out when scaled down. -->
+  <circle cx="16" cy="16" r="15.75" fill="#8cc63f"/>
+  <path d="M0.25 16 A15.75 15.75 0 0 1 31.75 16 Z" fill="#c4f060"/>
+  <path d="M16 7.5 A8.5 8.5 0 1 1 7.5 16" fill="none" stroke="#0b1220" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="16" cy="16" r="3.25" fill="#0b1220"/>
 </svg>

@@ -15,8 +15,18 @@ const showStill = (video: HTMLVideoElement) => {
   if (Number.isFinite(video.duration)) video.currentTime = video.duration * 0.4;
 };
 
+const PREVIEW_SPEED = 1.15;
+
 const LoaderVideo = ({ id, name, autoPlay = false }: LoaderVideoProps) => {
   const ref = useRef<HTMLVideoElement>(null);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the video is keyed by id, so each new element needs its rate set again.
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    video.defaultPlaybackRate = PREVIEW_SPEED;
+    video.playbackRate = PREVIEW_SPEED;
+  }, [id]);
 
   // The metadata often loads before React hydrates and attaches onLoadedMetadata, so check once mounted too.
   useEffect(() => {

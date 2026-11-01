@@ -1,9 +1,15 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 import { SITE_NAME, TAGLINE } from '@/lib/site';
 
 export const alt = `${SITE_NAME}: ${TAGLINE}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
+
+// The site builds from site/, so the extension's theme folder is one level up.
+const orbData = await readFile(join(process.cwd(), '../src/theme/logo-orb.svg'), 'base64');
+const orbSrc = `data:image/svg+xml;base64,${orbData}`;
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -28,16 +34,13 @@ export default function OpengraphImage() {
           background: 'radial-gradient(ellipse at 75% 20%, #1f3550 0%, #0b1220 40%, #020304 80%)',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            width: 200,
-            height: 200,
-            borderRadius: 100,
-            background:
-              'radial-gradient(circle at 38% 32%, #ffffff 0%, #d8ff8a 14%, #8cc63f 40%, #3f7a12 72%, #0b1a03 100%)',
-            boxShadow: '0 0 90px rgba(156, 230, 60, 0.75)',
-          }}
+        {/* biome-ignore lint/performance/noImgElement: ImageResponse renders plain img elements */}
+        <img
+          src={orbSrc}
+          alt=""
+          width={220}
+          height={220}
+          style={{ borderRadius: 110, boxShadow: '0 0 90px rgba(156, 230, 60, 0.6)' }}
         />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div
@@ -52,7 +55,7 @@ export default function OpengraphImage() {
               lineHeight: 1,
             }}
           >
-            Loading <span style={{ color: '#9be05a', marginLeft: 22 }}>Screens</span>
+            Loading <span style={{ color: '#9be05a', marginLeft: 22 }}>Screenz</span>
           </div>
           <div style={{ display: 'flex', color: '#8fd84a', fontSize: 40, fontStyle: 'italic', fontWeight: 700 }}>
             {TAGLINE}

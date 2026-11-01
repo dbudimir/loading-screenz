@@ -1,61 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
-  <title>Loading Screens</title>
-  <defs>
-    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.3" stop-color="#e2e5e2"/>
-      <stop offset="0.55" stop-color="#9da39f"/>
-      <stop offset="0.62" stop-color="#b9beba"/>
-      <stop offset="1" stop-color="#eef0ee"/>
-    </linearGradient>
-    <radialGradient id="screen" cx="0.7" cy="0.25" r="0.85">
-      <stop offset="0" stop-color="#25405f"/>
-      <stop offset="0.45" stop-color="#0b1220"/>
-      <stop offset="1" stop-color="#020304"/>
-    </radialGradient>
-    <radialGradient id="orb" cx="0.38" cy="0.32" r="0.7">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.18" stop-color="#d8ff8a"/>
-      <stop offset="0.45" stop-color="#8cc63f"/>
-      <stop offset="0.8" stop-color="#3f7a12"/>
-      <stop offset="1" stop-color="#173006"/>
-    </radialGradient>
-    <radialGradient id="glow">
-      <stop offset="0" stop-color="#b8ff4a" stop-opacity="0.75"/>
-      <stop offset="1" stop-color="#b8ff4a" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="segment" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#e2ff9e"/>
-      <stop offset="1" stop-color="#7cbc2e"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Chrome bezel -->
-  <circle cx="64" cy="64" r="58" fill="url(#chrome)" stroke="#5f6561" stroke-width="1.5"/>
-  <circle cx="64" cy="64" r="49" fill="#2a2d2b"/>
-
-  <!-- Deep-space screen -->
-  <circle cx="64" cy="64" r="47.5" fill="url(#screen)"/>
-  <circle cx="40" cy="44" r="0.8" fill="#fff" opacity="0.8"/>
-  <circle cx="88" cy="88" r="0.7" fill="#cfe" opacity="0.6"/>
-  <circle cx="92" cy="40" r="0.6" fill="#fff" opacity="0.5"/>
-
-  <!-- Loading spinner: eight segments fading around the ring -->
-  <g transform="translate(64 64)" fill="url(#segment)">
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(0)" opacity="1"/>
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(315)" opacity="0.88"/>
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(270)" opacity="0.76"/>
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(225)" opacity="0.64"/>
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(180)" opacity="0.52"/>
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(135)" opacity="0.4"/>
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(90)" opacity="0.28"/>
-    <rect x="-4" y="-42" width="8" height="14" rx="4" transform="rotate(45)" opacity="0.18"/>
-  </g>
-
-  <!-- Glowing core -->
-  <circle cx="64" cy="64" r="26" fill="url(#glow)"/>
-  <circle cx="64" cy="64" r="16" fill="url(#orb)"/>
-
-  <!-- Gloss across the top of the bezel -->
-  <path d="M18 52 A47 47 0 0 1 110 52 Q64 40 18 52 Z" fill="#fff" opacity="0.18"/>
+  <title>Loading Screenz</title>
+  <!-- Same as the extension icon (assets/icons/icon.svg). -->
+  <circle cx="64" cy="64" r="62" fill="#8cc63f"/>
+  <path d="M2 64 A62 62 0 0 1 126 64 Z" fill="#c4f060"/>
+  <path d="M64 30 A34 34 0 1 1 30 64" fill="none" stroke="#0b1220" stroke-width="17" stroke-linecap="round"/>
+  <circle cx="64" cy="64" r="11" fill="#0b1220"/>
 </svg>

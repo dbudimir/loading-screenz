@@ -1,6 +1,8 @@
-import { StrictMode, useState, type CSSProperties, type ReactNode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BUILT_IN_LOADERS, groupByCategory } from '../shared/loaders';
+'use client';
+
+import { type CSSProperties, type ReactNode, useEffect, useState } from 'react';
+import { LOADERS, loaderSrc } from '@/lib/loaders';
+import { FLAT_LOGOS, type LogoOption, ORB_LOGOS } from './logos';
 import './styleguide.css';
 
 const THEMES = [
@@ -18,6 +20,7 @@ const SECTIONS = [
   { id: 'panels', label: 'Panels' },
   { id: 'popup', label: 'Popup' },
   { id: 'library', label: 'Library' },
+  { id: 'logos', label: 'Logos' },
 ];
 
 const SWATCHES = [
@@ -39,8 +42,21 @@ const SWATCHES = [
 
 const TEXTURES = ['brushed', 'grille', 'carbon', 'plastic', 'space'];
 
-function tokenValue(token: string) {
-  return getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+const CATEGORIES = [
+  { category: 'game', label: 'Game loading screens' },
+  { category: 'console', label: 'Console startups' },
+] as const;
+
+const LOADER_GROUPS = CATEGORIES.map(({ category, label }) => ({
+  category,
+  label,
+  loaders: LOADERS.filter(loader => loader.category === category),
+}));
+
+/** Resolved token values. Only readable in the browser, so they're read after mount and on theme changes. */
+function readTokenValues(): Record<string, string> {
+  const styles = getComputedStyle(document.documentElement);
+  return Object.fromEntries(SWATCHES.map(({ token }) => [token, styles.getPropertyValue(token).trim()]));
 }
 
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
@@ -61,7 +77,15 @@ function Specimen({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-function Slider({ label, value, unit, min, max, onChange, disabled }: {
+function Slider({
+  label,
+  value,
+  unit,
+  min,
+  max,
+  onChange,
+  disabled,
+}: {
   label: string;
   value: number;
   unit: string;
@@ -73,7 +97,11 @@ function Slider({ label, value, unit, min, max, onChange, disabled }: {
   return (
     <label className="sg-slider">
       <span>
-        {label} <output className="lz-led">{value}{unit}</output>
+        {label}{' '}
+        <output className="lz-led">
+          {value}
+          {unit}
+        </output>
       </span>
       <input
         className="lz-range"
@@ -89,14 +117,16 @@ function Slider({ label, value, unit, min, max, onChange, disabled }: {
   );
 }
 
-function LoaderSelect({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+function LoaderSelect({ id, value, onChange }: { id?: string; value: string; onChange: (value: string) => void }) {
   return (
-    <select className="lz-select" value={value} onChange={e => onChange(e.target.value)}>
+    <select id={id} className="lz-select" value={value} onChange={e => onChange(e.target.value)}>
       <option value="random">Random</option>
-      {groupByCategory(BUILT_IN_LOADERS).filter(group => group.loaders.length).map(group => (
+      {LOADER_GROUPS.map(group => (
         <optgroup key={group.category} label={group.label}>
           {group.loaders.map(loader => (
-            <option key={loader.id} value={loader.id}>{loader.name}</option>
+            <option key={loader.id} value={loader.id}>
+              {loader.name}
+            </option>
           ))}
         </optgroup>
       ))}
@@ -104,23 +134,92 @@ function LoaderSelect({ value, onChange }: { value: string; onChange: (value: st
   );
 }
 
-function Tile({ path, name, children }: { path: string; name: string; children?: ReactNode }) {
+function Tile({ id, name, children }: { id: string; name: string; children?: ReactNode }) {
   return (
     <figure className="lz-tile">
       <div className="lz-tile-frame">
         <video
-          src={path}
+          src={loaderSrc(id)}
           muted
           loop
           playsInline
           preload="metadata"
-          onLoadedMetadata={e => (e.currentTarget.currentTime = e.currentTarget.duration * 0.4)}
+          onLoadedMetadata={e => {
+            e.currentTarget.currentTime = e.currentTarget.duration * 0.4;
+          }}
           onMouseEnter={e => e.currentTarget.play().catch(() => {})}
           onMouseLeave={e => e.currentTarget.pause()}
         />
       </div>
       <figcaption className="lz-tile-caption">{name}</figcaption>
       {children}
+    </figure>
+  );
+}
+
+function OrbLogoCard({ logo }: { logo: LogoOption }) {
+  return (
+    <figure className="sg-logo-card">
+      <div className="lz-screen lz-texture-space sg-logo-stage">
+        <logo.Mark size={128} />
+      </div>
+      <div className="sg-logo-lockup">
+        <span className="lz-logo">
+          <logo.Mark size={26} />
+          <span className="lz-logo-word lz-logo-word--stacked">
+            Loading <b>Screenz</b>
+          </span>
+        </span>
+      </div>
+      <figcaption className="sg-logo-caption">
+        <span className="lz-heading">
+          {logo.letter} · {logo.name} {logo.inUse && <span className="lz-badge lz-badge--live">In use</span>}
+        </span>
+        <span className="lz-fine">{logo.note}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function FlatLogoCard({ logo }: { logo: LogoOption }) {
+  return (
+    <figure className="sg-logo-card">
+      <div className="sg-logo-pair">
+        <div className="sg-logo-light">
+          <logo.Mark size={72} />
+        </div>
+        <div className="sg-logo-dark">
+          <logo.Mark size={72} />
+        </div>
+      </div>
+      <div className="sg-logo-sizes">
+        {[48, 32, 16].map(size => (
+          <span key={size}>
+            <logo.Mark size={size} />
+            <code>{size}</code>
+          </span>
+        ))}
+      </div>
+      {['light', 'dark'].map(mode => (
+        <div key={mode} className={`sg-browser sg-browser--${mode}`}>
+          <span className="sg-browser-tab">
+            <logo.Mark size={16} />
+            Loading Screenz
+          </span>
+          <span className="sg-browser-toolbar">
+            <span className="sg-browser-dot" />
+            <span className="sg-browser-dot" />
+            <logo.Mark size={16} />
+            <span className="sg-browser-dot" />
+          </span>
+        </div>
+      ))}
+      <figcaption className="sg-logo-caption">
+        <span className="lz-heading">
+          {logo.letter} · {logo.name} {logo.inUse && <span className="lz-badge lz-badge--live">In use</span>}
+        </span>
+        <span className="lz-fine">{logo.note}</span>
+      </figcaption>
     </figure>
   );
 }
@@ -136,29 +235,57 @@ function PopupMockup() {
       <header className="lz-shell-cap">
         <span className="lz-logo">
           <span className="lz-logo-orb" />
-          <span className="lz-logo-word">Loading <b>Screens</b></span>
+          <span className="lz-logo-word lz-logo-word--stacked">
+            Loading <b>Screenz</b>
+          </span>
         </span>
       </header>
       <div className="lz-rail" />
       <div className="lz-screen lz-texture-space sg-popup-screen">
         <label className="lz-power">
-          <input type="checkbox" role="switch" checked={enabled} onChange={e => setEnabled(e.target.checked)} />
+          <input
+            type="checkbox"
+            role="switch"
+            aria-checked={enabled}
+            checked={enabled}
+            onChange={e => setEnabled(e.target.checked)}
+          />
           <span>
             <span className="lz-heading">{enabled ? 'Powered on' : 'Powered off'}</span>
             <span className="lz-fine sg-block">Loading screens on {frequency}% of link clicks</span>
           </span>
         </label>
         <fieldset disabled={!enabled} className="sg-fieldset">
-          <label className="sg-field">
-            <span className="lz-heading">Loading screen</span>
-            <LoaderSelect value={loader} onChange={setLoader} />
-          </label>
-          <Slider label="Frequency" value={frequency} unit="%" min={1} max={100} onChange={setFrequency} disabled={!enabled} />
-          <Slider label="Duration" value={duration} unit="s" min={1} max={15} onChange={setDuration} disabled={!enabled} />
+          <div className="sg-field">
+            <label htmlFor="sg-popup-loader" className="lz-heading">
+              Loading screen
+            </label>
+            <LoaderSelect id="sg-popup-loader" value={loader} onChange={setLoader} />
+          </div>
+          <Slider
+            label="Frequency"
+            value={frequency}
+            unit="%"
+            min={1}
+            max={100}
+            onChange={setFrequency}
+            disabled={!enabled}
+          />
+          <Slider
+            label="Duration"
+            value={duration}
+            unit="s"
+            min={1}
+            max={15}
+            onChange={setDuration}
+            disabled={!enabled}
+          />
         </fieldset>
       </div>
       <footer className="lz-shell-foot">
-        <button type="button" className="lz-button">Manage library…</button>
+        <button type="button" className="lz-button">
+          Manage library…
+        </button>
         <span className="lz-badge lz-badge--live">Live</span>
       </footer>
     </div>
@@ -176,34 +303,41 @@ function LibraryMockup() {
       <header className="lz-shell-cap">
         <span className="lz-logo">
           <span className="lz-logo-orb" />
-          <span className="lz-logo-word">Loading <b>Screens</b></span>
+          <span className="lz-logo-word">
+            Loading <b>Screenz</b>
+          </span>
         </span>
         <span className="lz-fine">Library · 9 loading screens</span>
       </header>
       <nav className="lz-nav">
-        <a href="#library" aria-current="page">Library</a>
+        <a href="#library" aria-current="page">
+          Library
+        </a>
         <a href="#library">Settings</a>
         <a href="#library">Themes</a>
         <a href="#library">About</a>
       </nav>
       <div className="lz-rail" />
       <div className="lz-screen lz-texture-space sg-library">
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: hover only previews the drag state */}
         <div
           className={`lz-dropzone lz-texture-grille${dragging ? ' is-dragging' : ''}`}
           onMouseEnter={() => setDragging(true)}
           onMouseLeave={() => setDragging(false)}
         >
           <p className="lz-heading">Drop video files here</p>
-          <button type="button" className="lz-button lz-button--primary">Choose files</button>
+          <button type="button" className="lz-button lz-button--primary">
+            Choose files
+          </button>
           <p className="lz-fine">MP4 (H.264) and WebM work everywhere. Clips up to 15 seconds look best.</p>
         </div>
 
-        {groupByCategory(BUILT_IN_LOADERS).filter(group => group.loaders.length).map(group => (
+        {LOADER_GROUPS.map(group => (
           <section key={group.category} className="sg-category">
             <h3 className="lz-bar">{group.label}</h3>
             <div className="sg-tiles">
               {group.loaders.map(loader => (
-                <Tile key={loader.id} path={loader.builtIn ? loader.path : ''} name={loader.name}>
+                <Tile key={loader.id} id={loader.id} name={loader.name}>
                   <label className="lz-check sg-tile-check">
                     <input
                       type="checkbox"
@@ -221,34 +355,42 @@ function LibraryMockup() {
         <section className="sg-category">
           <h3 className="lz-bar">Your videos</h3>
           <div className="sg-tiles">
-            <Tile path="media/halo.mp4" name="">
+            <Tile id="halo" name="">
               <input className="lz-input" defaultValue="My Halo edit" aria-label="Name" />
               <span className="lz-fine sg-center">15s · 1.2 MB</span>
-              <button type="button" className="lz-button lz-button--danger lz-button--small">Delete</button>
+              <button type="button" className="lz-button lz-button--danger lz-button--small">
+                Delete
+              </button>
             </Tile>
           </div>
         </section>
 
         <div className="lz-ticker">
-          <span>Storage used: 3.4 MB ··· 9 loading screens in your library ··· Tip: hover a screen to preview it ···</span>
+          <span>
+            Storage used: 3.4 MB ··· 9 loading screens in your library ··· Tip: hover a screen to preview it ···
+          </span>
         </div>
       </div>
       <footer className="lz-shell-foot">
-        <span>Loading Screens is not affiliated with Microsoft, Sony, Nintendo, or Sega.</span>
+        <span>Loading Screenz is not affiliated with Microsoft, Sony, Nintendo, or Sega.</span>
       </footer>
     </div>
   );
 }
 
-function StyleGuide() {
+export default function StyleGuide() {
   const [theme, setTheme] = useState('xbox');
   const [power, setPower] = useState(true);
   const [check, setCheck] = useState(true);
   const [range, setRange] = useState(60);
+  const [tokenValues, setTokenValues] = useState<Record<string, string>>({});
+
+  useEffect(() => setTokenValues(readTokenValues()), []);
 
   const changeTheme = (id: string) => {
     setTheme(id);
     document.documentElement.dataset.theme = id;
+    setTokenValues(readTokenValues());
   };
 
   return (
@@ -257,14 +399,17 @@ function StyleGuide() {
         <header className="lz-shell-cap">
           <span className="lz-logo">
             <span className="lz-logo-orb" />
-            <span className="lz-logo-word">Loading <b>Screens</b></span>
+            <span className="lz-logo-word">
+              Loading <b>Screenz</b>
+            </span>
           </span>
           <label className="sg-theme">
             <span className="lz-fine">Theme</span>
             <select className="lz-select" value={theme} onChange={e => changeTheme(e.target.value)}>
               {THEMES.map(item => (
                 <option key={item.id} value={item.id} disabled={!item.ready}>
-                  {item.name}{item.ready ? '' : ' (planned)'}
+                  {item.name}
+                  {item.ready ? '' : ' (planned)'}
                 </option>
               ))}
             </select>
@@ -298,7 +443,9 @@ function StyleGuide() {
                   <div className="sg-swatch-chip" style={{ background: `var(${swatch.token})` }} />
                   <strong>{swatch.name}</strong>
                   <code>{swatch.token}</code>
-                  <code className="sg-value">{tokenValue(swatch.token).startsWith('#') ? tokenValue(swatch.token) : 'gradient'}</code>
+                  <code className="sg-value">
+                    {tokenValues[swatch.token]?.startsWith('#') ? tokenValues[swatch.token] : 'gradient'}
+                  </code>
                 </div>
               ))}
             </div>
@@ -324,33 +471,51 @@ function StyleGuide() {
           <Section id="type" title="Type">
             <div className="sg-grid-2">
               <div className="lz-screen lz-texture-space sg-stack">
-                <Specimen label=".lz-display (Arial Black)"><p className="lz-display">Halo 2</p></Specimen>
+                <Specimen label=".lz-display (Arial Black)">
+                  <p className="lz-display">Halo 2</p>
+                </Specimen>
                 <Specimen label=".lz-heading (Trebuchet MS bold italic)">
                   <p className="lz-heading">Need for Speed Underground 2:</p>
                 </Specimen>
                 <Specimen label=".lz-text (Verdana 11px)">
-                  <p className="lz-text">We've pined. We've yearned. We've waited patiently… but no longer! It's in stores now.</p>
+                  <p className="lz-text">
+                    We've pined. We've yearned. We've waited patiently… but no longer! It's in stores now.
+                  </p>
                 </Specimen>
                 <Specimen label=".lz-fine (Verdana 10px)">
-                  <p className="lz-fine">©2004 Loading Screens. All rights reserved. Not affiliated with any console maker.</p>
+                  <p className="lz-fine">
+                    ©2004 Loading Screenz. All rights reserved. Not affiliated with any console maker.
+                  </p>
                 </Specimen>
               </div>
               <div className="sg-stack">
-                <Specimen label=".lz-bar"><h3 className="lz-bar">Upcoming Games</h3></Specimen>
+                <Specimen label=".lz-bar">
+                  <h3 className="lz-bar">Upcoming Games</h3>
+                </Specimen>
                 <Specimen label=".lz-links inside .lz-panel">
                   <div className="lz-panel">
                     <ul className="lz-links">
-                      <li><a href="#type">First Encounter</a></li>
-                      <li><a href="#type">What's New in Halo 2</a></li>
-                      <li><a href="#type">Dual Wielding Tips</a></li>
+                      <li>
+                        <a href="#type">First Encounter</a>
+                      </li>
+                      <li>
+                        <a href="#type">What's New in Halo 2</a>
+                      </li>
+                      <li>
+                        <a href="#type">Dual Wielding Tips</a>
+                      </li>
                     </ul>
                   </div>
                 </Specimen>
                 <Specimen label=".lz-links inside .lz-screen">
                   <div className="lz-screen">
                     <ul className="lz-links">
-                      <li><a href="#type">NYC: Midnight Madness</a></li>
-                      <li><a href="#type">Seattle: Fans Gather at Midnight</a></li>
+                      <li>
+                        <a href="#type">NYC: Midnight Madness</a>
+                      </li>
+                      <li>
+                        <a href="#type">Seattle: Fans Gather at Midnight</a>
+                      </li>
                     </ul>
                   </div>
                 </Specimen>
@@ -361,29 +526,45 @@ function StyleGuide() {
           <Section id="controls" title="Controls">
             <div className="sg-specimens">
               <Specimen label=".lz-button">
-                <button type="button" className="lz-button">Sign In</button>
+                <button type="button" className="lz-button">
+                  Sign In
+                </button>
               </Specimen>
               <Specimen label=".lz-button--primary">
-                <button type="button" className="lz-button lz-button--primary">Choose files</button>
+                <button type="button" className="lz-button lz-button--primary">
+                  Choose files
+                </button>
               </Specimen>
               <Specimen label=".lz-button--danger">
-                <button type="button" className="lz-button lz-button--danger">Delete</button>
+                <button type="button" className="lz-button lz-button--danger">
+                  Delete
+                </button>
               </Specimen>
               <Specimen label=".lz-button--small">
-                <button type="button" className="lz-button lz-button--small">GO</button>
+                <button type="button" className="lz-button lz-button--small">
+                  GO
+                </button>
               </Specimen>
               <Specimen label=".lz-button:disabled">
-                <button type="button" className="lz-button lz-button--primary" disabled>Adding…</button>
+                <button type="button" className="lz-button lz-button--primary" disabled>
+                  Adding…
+                </button>
               </Specimen>
               <Specimen label=".lz-power">
                 <label className="lz-power">
-                  <input type="checkbox" role="switch" checked={power} onChange={e => setPower(e.target.checked)} />
+                  <input
+                    type="checkbox"
+                    role="switch"
+                    aria-checked={power}
+                    checked={power}
+                    onChange={e => setPower(e.target.checked)}
+                  />
                   {power ? 'On' : 'Off'}
                 </label>
               </Specimen>
               <Specimen label=".lz-power (disabled)">
                 <label className="lz-power">
-                  <input type="checkbox" role="switch" disabled />
+                  <input type="checkbox" role="switch" aria-checked={false} disabled />
                   Off
                 </label>
               </Specimen>
@@ -417,18 +598,24 @@ function StyleGuide() {
             <div className="sg-grid-2">
               <div className="lz-screen lz-texture-space sg-stack">
                 <div className="sg-feature">
-                  <Tile path="media/xbox.mp4" name="" />
+                  <Tile id="xbox" name="" />
                   <div>
-                    <p className="lz-heading">Xbox <span className="lz-badge lz-badge--live">Live</span></p>
-                    <p className="lz-text">The green core powers up. A deep-space .lz-screen with a neon heading and body text.</p>
+                    <p className="lz-heading">
+                      Xbox <span className="lz-badge lz-badge--live">Live</span>
+                    </p>
+                    <p className="lz-text">
+                      The green core powers up. A deep-space .lz-screen with a neon heading and body text.
+                    </p>
                   </div>
                 </div>
-                <div className="lz-ticker"><span>.lz-ticker ··· Now loading: Halo 2 ··· Earth will never be the same ···</span></div>
+                <div className="lz-ticker">
+                  <span>.lz-ticker ··· Now loading: Halo 2 ··· Earth will never be the same ···</span>
+                </div>
               </div>
               <div className="sg-stack">
                 <div className="sg-tiles">
-                  <Tile path="media/halo.mp4" name="Halo 2 Video" />
-                  <Tile path="media/gta-san-andreas.mp4" name="San Andreas Video" />
+                  <Tile id="halo" name="Halo 2 Video" />
+                  <Tile id="gta-san-andreas" name="San Andreas Video" />
                 </div>
                 <div className="lz-dropzone lz-texture-grille">
                   <p className="lz-heading">.lz-dropzone on .lz-texture-grille</p>
@@ -438,20 +625,46 @@ function StyleGuide() {
           </Section>
 
           <Section id="popup" title="Popup mockup">
-            <p className="lz-text sg-note">The toolbar popup, 300px wide, restyled with the components. Everything is interactive.</p>
+            <p className="lz-text sg-note">
+              The toolbar popup, 300px wide, restyled with the components. Everything is interactive.
+            </p>
             <PopupMockup />
           </Section>
 
           <Section id="library" title="Library mockup">
-            <p className="lz-text sg-note">The library page. Hover a screen to play it, and hover the drop zone for its drag state.</p>
+            <p className="lz-text sg-note">
+              The library page. Hover a screen to play it, and hover the drop zone for its drag state.
+            </p>
             <LibraryMockup />
+          </Section>
+
+          <Section id="logos" title="Logo marks">
+            <p className="lz-text sg-note">
+              Round orb marks for the logo, and flat icons for the favicon and extension toolbar icon. Each flat icon
+              shares a letter with an orb. A (Power Core) and B (Flat Jewel) are in use; the rest are kept for
+              reference. Hover a mark to see it animate.
+            </p>
+            <h3 className="lz-heading sg-subhead">Orb marks</h3>
+            <div className="sg-logo-grid">
+              {ORB_LOGOS.map(logo => (
+                <OrbLogoCard key={logo.letter} logo={logo} />
+              ))}
+            </div>
+            <h3 className="lz-heading sg-subhead">Flat icons</h3>
+            <div className="sg-logo-grid">
+              {FLAT_LOGOS.map(logo => (
+                <FlatLogoCard key={logo.letter} logo={logo} />
+              ))}
+            </div>
           </Section>
         </div>
 
         <footer className="lz-shell-foot">
           <span className="lz-logo">
             <span className="lz-logo-orb" />
-            <span className="lz-logo-word">Loading <b>Screens</b></span>
+            <span className="lz-logo-word">
+              Loading <b>Screenz</b>
+            </span>
           </span>
           <span>docs/design-system.md · src/theme/</span>
         </footer>
@@ -459,9 +672,3 @@ function StyleGuide() {
     </div>
   );
 }
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <StyleGuide />
-  </StrictMode>
-);
