@@ -1,13 +1,23 @@
 'use client';
 
 import styled from 'styled-components';
+import HackerInstall from './HackerInstall';
 import InstallButton from './InstallButton';
 
 const Section = styled.section`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: 24px;
+  align-items: center;
   margin-top: 14px;
   padding: 26px 28px;
 
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+
   @media (max-width: 640px) {
+    padding: 22px 16px;
     text-align: center;
   }
 `;
@@ -39,6 +49,7 @@ const FinalCta = () => (
         <InstallButton size="large" label="Install Loading Screenz" />
       </div>
     </Copy>
+    <HackerInstall />
   </Section>
 );
 

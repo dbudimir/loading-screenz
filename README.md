@@ -4,6 +4,8 @@ A browser extension that turns link clicks into classic video game loading scree
 
 Built on Manifest V3 for Chrome and other Chromium browsers (Edge, Brave, Arc, Opera, Vivaldi), version 120 or newer.
 
+Website: [loadingscreenz.com](https://www.loadingscreenz.com)
+
 ## Features
 
 - Fullscreen loading video on link clicks, with a vignette over the top.
@@ -16,6 +18,58 @@ Built on Manifest V3 for Chrome and other Chromium browsers (Edge, Brave, Arc, O
 
 ## Install
 
+There are three ways to install Loading Screenz:
+
+- **Chrome Web Store:** coming soon. The extension is in review.
+- **[Install without the Chrome Web Store](#install-without-the-chrome-web-store):** download it from GitHub and load it yourself. Takes about two minutes and no coding.
+- **[Build from source](#build-from-source):** for developers who want to change the code.
+
+### Install without the Chrome Web Store
+
+Chrome lets you install an extension from a folder on your computer by turning on Developer mode. These steps are for Chrome; Edge, Brave, Arc, Opera, and Vivaldi work the same way (see the table below).
+
+**1. Download the extension.**
+Download [**loading-screenz.zip**](https://github.com/dbudimir/loading-screenz/releases/latest/download/loading-screenz.zip) from the [latest release](https://github.com/dbudimir/loading-screenz/releases/latest). Don't use GitHub's green **Code → Download ZIP** button: that's the source code, not the ready-to-install extension.
+
+**2. Unzip it and put the folder somewhere permanent.**
+Double-click the zip to unzip it (on Windows, right-click it and choose **Extract All**). You get a folder named `loading-screenz`. Move it somewhere you won't delete or rename it, like your Documents folder. Chrome loads the extension from this folder every time it starts, so if the folder goes away, so does the extension.
+
+**3. Open the extensions page.**
+Type `chrome://extensions` in the address bar and press Enter. (Or open the **⋮** menu → **Extensions** → **Manage Extensions**.)
+
+**4. Turn on Developer mode.**
+Flip the **Developer mode** switch in the top-right corner of the page. A new row of buttons appears.
+
+**5. Load the folder.**
+Click **Load unpacked** and select the `loading-screenz` folder from step 2: the one with `manifest.json` directly inside it. Loading Screenz appears in your list of extensions.
+
+**6. Pin it to the toolbar.**
+Click the puzzle-piece icon to the right of the address bar, then the pin next to **Loading Screenz**. Click the Loading Screenz icon any time to open the settings.
+
+**7. Try it.**
+Refresh any tabs that were already open (the extension only starts on pages loaded after it's installed). Then open the settings, set **Frequency** to 100%, and click a link on any website. Turn Frequency back down when you've seen enough.
+
+| Browser | Extensions page | Where Developer mode is |
+| --- | --- | --- |
+| Chrome | `chrome://extensions` | Top-right corner |
+| Edge | `edge://extensions` | Left sidebar |
+| Brave | `brave://extensions` | Top-right corner |
+| Opera | `opera://extensions` | Top-right corner |
+| Arc, Vivaldi | `arc://extensions`, `vivaldi://extensions` | Top-right corner |
+
+**Updating.** Download the new `loading-screenz.zip` from the [latest release](https://github.com/dbudimir/loading-screenz/releases/latest), unzip it, and replace the files in your existing `loading-screenz` folder with the new ones. Then click the reload arrow on the Loading Screenz card at `chrome://extensions`. Keeping the same folder in the same place keeps your settings and your video library.
+
+**Uninstalling.** Click **Remove** on the Loading Screenz card at `chrome://extensions`, then delete the folder.
+
+**Good to know**
+
+- Chrome may show a "Disable developer mode extensions" message when it starts. Click the X to dismiss it, or **Keep** if you see that option. It's Chrome's standard reminder for any extension that didn't come from the store.
+- Installed this way, the extension doesn't update automatically. Watch or star the repo to hear about new releases.
+- "Manifest file is missing or unreadable" means the selected folder isn't the right one. Pick the folder that has `manifest.json` directly inside it, not a folder that contains another `loading-screenz` folder.
+- Installs from your own folder have the same permissions and privacy as the store version: no data leaves your browser.
+
+### Build from source
+
 You need [Node.js](https://nodejs.org) 20+ and [pnpm](https://pnpm.io).
 
 ```sh
@@ -25,14 +79,7 @@ pnpm install
 pnpm build
 ```
 
-Then load the `dist/` folder into your browser:
-
-1. Open the extensions page: `chrome://extensions`, `edge://extensions`, `brave://extensions`, or your browser's equivalent.
-2. Turn on **Developer mode**.
-3. Click **Load unpacked** and select the `dist/` folder.
-4. Pin the Loading Screenz icon to the toolbar to get to the settings.
-
-Pages that were already open before loading the extension need a refresh before it works on them.
+Then follow steps 3 to 7 above, selecting the `dist/` folder in step 5.
 
 ## Settings
 
@@ -229,6 +276,13 @@ pnpm zip
 ```
 
 This creates `loading-screenz.zip`, which you can upload in the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole) or [Microsoft Edge Add-ons](https://partner.microsoft.com/dashboard/microsoftedge). Bump `version` in `public/manifest.json` before each upload.
+
+To publish the same zip as a GitHub release for [installing without the store](#install-without-the-chrome-web-store), tag it with the manifest version. The download link in the install steps always points to the latest release, so it doesn't need updating:
+
+```sh
+pnpm zip
+gh release create v1.1.0 loading-screenz.zip --title "Loading Screenz 1.1.0" --notes "What changed in this version."
+```
 
 The step-by-step store plan, with the listing text and permission justifications ready to paste, is in [docs/publishing.md](docs/publishing.md). `pnpm store-assets` regenerates the store screenshots and promo tiles in `store/`.
 

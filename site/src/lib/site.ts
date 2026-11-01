@@ -7,6 +7,9 @@ export const INSTALL_URL = process.env.NEXT_PUBLIC_INSTALL_URL ?? 'https://githu
 
 export const GITHUB_URL = 'https://github.com/dbudimir/loading-screenz';
 
+/** Step-by-step guide for loading the extension unpacked from a GitHub release, for people who'd rather skip the store. */
+export const MANUAL_INSTALL_URL = `${GITHUB_URL}#install-without-the-chrome-web-store`;
+
 export const SITE_NAME = 'Loading Screenz';
 
 export const TAGLINE = 'Every click is a loading screen.';

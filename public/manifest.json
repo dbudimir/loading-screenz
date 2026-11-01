@@ -3,7 +3,7 @@
   "name": "Loading Screenz",
   "version": "1.1.0",
   "description": "Classic video game loading screens and console startups while you browse the web.",
-  "homepage_url": "https://budimir.dev",
+  "homepage_url": "https://www.loadingscreenz.com",
   "minimum_chrome_version": "120",
   "icons": {
     "16": "icons/icon16.png",

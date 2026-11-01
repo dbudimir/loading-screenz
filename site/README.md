@@ -51,6 +51,8 @@ site/
 2. Set **Root Directory** to `site`. Keep "Include files outside the root directory" on, since the site imports the theme and videos from the extension.
 3. Set `NEXT_PUBLIC_INSTALL_URL` (and `NEXT_PUBLIC_APP_URL` if you use a custom domain).
 
+Live at [www.loadingscreenz.com](https://www.loadingscreenz.com) (`loadingscreenz.com` redirects there). The Vercel project is `loading-screenz` on the 77 Projects team, with `NEXT_PUBLIC_APP_URL=https://www.loadingscreenz.com` set for Production. Every push to `main` deploys to production.
+
 ## Scripts
 
 | Command | What it does |

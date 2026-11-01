@@ -24,6 +24,10 @@ const QUESTIONS = [
     a: 'Chrome 120 or newer, plus Chromium browsers like Edge, Brave, Arc, Opera, and Vivaldi.',
   },
   {
+    q: 'Can I install it without the Chrome Web Store?',
+    a: 'Yep. Download it from GitHub and load it into Chrome yourself with Developer mode. The step-by-step guide is in the GitHub README under "Install without the Chrome Web Store." It takes about two minutes, no coding required.',
+  },
+  {
     q: 'Does it work on every site?',
     a: 'It works on regular links across the web. It skips links that open in a new tab, downloads, and links that web apps handle themselves, so nothing breaks.',
   },
