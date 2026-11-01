@@ -1,0 +1,816 @@
+---
+description: Modern accessibility best practices and WCAG compliance guidelines for web development
+globs:
+alwaysApply: false
+---
+
+# Accessibility Best Practices
+
+## Description
+
+This guide provides comprehensive accessibility guidelines following WCAG 2.1/2.2 standards to ensure your web applications are usable by everyone, including people with disabilities.
+
+## Why Accessibility Matters
+
+- **Legal Compliance**: Many regions require WCAG 2.1 Level AA compliance
+- **Better UX**: Accessible design benefits all users, not just those with disabilities
+- **SEO Benefits**: Many accessibility improvements also help search engines
+- **Wider Audience**: 15% of the world's population has some form of disability
+- **Moral Responsibility**: Everyone deserves equal access to digital content
+
+## WCAG Conformance Levels
+
+- **Level A**: Minimum level of conformance (basic accessibility)
+- **Level AA**: Target level for most websites (recommended)
+- **Level AAA**: Highest level (not always feasible for all content)
+
+**Recommendation**: Aim for WCAG 2.1 Level AA compliance as a baseline.
+
+---
+
+## 1. Semantic HTML Structure
+
+### Use Proper HTML Elements
+
+Always use semantic HTML5 elements instead of generic divs and spans:
+
+```tsx
+// ❌ Bad - Non-semantic
+<div class="header">
+  <div class="nav">
+    <div class="nav-item">Home</div>
+  </div>
+</div>
+
+// ✅ Good - Semantic
+<header>
+  <nav>
+    <a href="/">Home</a>
+  </nav>
+</header>
+```
+
+### Semantic Element Reference
+
+| Element     | Purpose                | When to Use                    |
+| ----------- | ---------------------- | ------------------------------ |
+| `<header>`  | Page/section header    | Top of page or section         |
+| `<nav>`     | Navigation links       | Main navigation, footer nav    |
+| `<main>`    | Main content           | Primary content (one per page) |
+| `<article>` | Self-contained content | Blog posts, news articles      |
+| `<section>` | Thematic grouping      | Content sections               |
+| `<aside>`   | Tangential content     | Sidebars, related content      |
+| `<footer>`  | Page/section footer    | Bottom of page or section      |
+
+### Heading Hierarchy
+
+Maintain proper heading order (h1 → h2 → h3):
+
+```tsx
+// ❌ Bad - Skips levels
+<h1>Page Title</h1>
+<h3>Section Title</h3> {/* Skipped h2 */}
+
+// ✅ Good - Proper hierarchy
+<h1>Page Title</h1>
+<h2>Section Title</h2>
+<h3>Subsection Title</h3>
+```
+
+**Rules:**
+
+- One `<h1>` per page (typically the page title)
+- Don't skip heading levels
+- Don't use headings for styling (use CSS instead)
+
+---
+
+## 2. ARIA Labels and Roles
+
+### When to Use ARIA
+
+ARIA (Accessible Rich Internet Applications) enhances accessibility but should be used carefully:
+
+**First Rule of ARIA**: If you can use a native HTML element, do that instead.
+
+```tsx
+// ❌ Bad - Unnecessary ARIA
+<div role="button" tabIndex={0} onClick={handleClick}>
+  Click me
+</div>
+
+// ✅ Good - Native element
+<button onClick={handleClick}>
+  Click me
+</button>
+```
+
+### Common ARIA Attributes
+
+#### aria-label
+
+Provides an accessible name when visible text isn't present:
+
+```tsx
+<button aria-label="Close dialog">
+  <XIcon />
+</button>
+
+<input
+  type="search"
+  aria-label="Search products"
+  placeholder="Search..."
+/>
+```
+
+#### aria-labelledby
+
+References another element's text as the label:
+
+```tsx
+<h2 id="dialog-title">Confirm Delete</h2>
+<div role="dialog" aria-labelledby="dialog-title">
+  {/* Dialog content */}
+</div>
+```
+
+#### aria-describedby
+
+Provides additional description:
+
+```tsx
+<input
+  type="password"
+  aria-describedby="password-requirements"
+/>
+<div id="password-requirements">
+  Must be at least 8 characters with one number
+</div>
+```
+
+#### aria-live
+
+Announces dynamic content changes:
+
+```tsx
+// For status messages
+<div aria-live="polite" aria-atomic="true">
+  {statusMessage}
+</div>
+
+// For urgent alerts
+<div aria-live="assertive" role="alert">
+  {errorMessage}
+</div>
+```
+
+**aria-live values:**
+
+- `polite`: Announce when convenient (status updates)
+- `assertive`: Interrupt immediately (errors, warnings)
+
+#### aria-hidden
+
+Hides content from screen readers:
+
+```tsx
+// Hide decorative icons
+<span aria-hidden="true">
+  <DecorativeIcon />
+</span>
+<span>Button Text</span>
+
+// Hide duplicated content
+<button>
+  <span aria-hidden="true">→</span>
+  <span>Next Page</span>
+</button>
+```
+
+### Common ARIA Roles
+
+```tsx
+// Navigation landmark
+<nav role="navigation">
+  {/* navigation links */}
+</nav>
+
+// Search landmark
+<form role="search">
+  <input type="search" />
+</form>
+
+// Alert for important messages
+<div role="alert">
+  Form submitted successfully!
+</div>
+
+// Dialog/Modal
+<div role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+  {/* dialog content */}
+</div>
+```
+
+---
+
+## 3. Keyboard Navigation
+
+All interactive elements must be keyboard accessible.
+
+### Tab Order
+
+Ensure logical tab order without using `tabIndex` greater than 0:
+
+```tsx
+// ❌ Bad - Creates unpredictable tab order
+<button tabIndex={5}>First</button>
+<button tabIndex={1}>Second</button>
+
+// ✅ Good - Natural DOM order
+<button>First</button>
+<button>Second</button>
+
+// ✅ Good - Remove from tab order when needed
+<div tabIndex={-1}>Not keyboard focusable</div>
+```
+
+### Keyboard Event Handlers
+
+Interactive elements need both click and keyboard handlers:
+
+```tsx
+// ✅ Good - Handles both mouse and keyboard
+<div
+  role="button"
+  tabIndex={0}
+  onClick={handleAction}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleAction();
+    }
+  }}
+>
+  Custom Button
+</div>
+```
+
+**Better:** Use native `<button>` which handles this automatically:
+
+```tsx
+<button onClick={handleAction}>Button</button>
+```
+
+### Common Keyboard Shortcuts
+
+| Key         | Action                           |
+| ----------- | -------------------------------- |
+| Tab         | Move focus forward               |
+| Shift + Tab | Move focus backward              |
+| Enter       | Activate button/link             |
+| Space       | Activate button, toggle checkbox |
+| Escape      | Close modal/menu                 |
+| Arrow Keys  | Navigate within component        |
+
+### Skip Links
+
+Provide skip links for keyboard users:
+
+```tsx
+// Add to top of layout
+<a href="#main-content" className="skip-link">
+  Skip to main content
+</a>;
+
+// Style to show only on focus
+const SkipLink = styled.a`
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+
+  &:focus {
+    top: 0;
+  }
+`;
+
+// Add id to main content
+<main id="main-content">{/* page content */}</main>;
+```
+
+---
+
+## 4. Focus Management
+
+### Visible Focus Indicators
+
+Never remove focus outlines without providing alternatives:
+
+```scss
+// ❌ Bad - Removes focus indicator
+button:focus {
+  outline: none;
+}
+
+// ✅ Good - Custom focus indicator
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+```
+
+### Focus Trapping in Modals
+
+Trap focus within modals when open:
+
+```tsx
+import { useEffect, useRef } from "react";
+
+function Modal({ isOpen, onClose, children }) {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const modal = modalRef.current;
+    const focusableElements = modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    // Focus first element
+    firstElement?.focus();
+
+    // Trap focus
+    const handleTab = (e) => {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    modal.addEventListener("keydown", handleTab);
+    return () => modal.removeEventListener("keydown", handleTab);
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      ref={modalRef}
+      role="dialog"
+      aria-modal="true"
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
+    >
+      {children}
+    </div>
+  );
+}
+```
+
+**Pro Tip:** Use libraries like `react-focus-lock` or `focus-trap-react` for robust focus management.
+
+---
+
+## 5. Color Contrast Requirements
+
+### WCAG Contrast Ratios
+
+- **Normal text**: Minimum 4.5:1 (Level AA)
+- **Large text** (18pt+ or 14pt+ bold): Minimum 3:1 (Level AA)
+- **UI components**: Minimum 3:1 (Level AA)
+
+### Testing Color Contrast
+
+```scss
+// ❌ Bad - Insufficient contrast (2.5:1)
+.text {
+  color: #777777;
+  background: #ffffff;
+}
+
+// ✅ Good - Sufficient contrast (4.6:1)
+.text {
+  color: #595959;
+  background: #ffffff;
+}
+```
+
+**Tools to check contrast:**
+
+- Chrome DevTools (Lighthouse audit)
+- WebAIM Contrast Checker
+- Stark plugin for Figma
+- Color contrast analyzer browser extensions
+
+### Don't Rely on Color Alone
+
+```tsx
+// ❌ Bad - Color only indicator
+<span style={{ color: 'red' }}>Error</span>
+<span style={{ color: 'green' }}>Success</span>
+
+// ✅ Good - Color + icon/text
+<span style={{ color: 'red' }}>
+  <ErrorIcon aria-hidden="true" /> Error
+</span>
+<span style={{ color: 'green' }}>
+  <SuccessIcon aria-hidden="true" /> Success
+</span>
+```
+
+---
+
+## 6. Form Accessibility
+
+### Label Every Input
+
+```tsx
+// ❌ Bad - No label
+<input type="text" placeholder="Enter your name" />
+
+// ✅ Good - Visible label
+<label htmlFor="name">Name</label>
+<input id="name" type="text" />
+
+// ✅ Also good - Wrapped label
+<label>
+  Name
+  <input type="text" />
+</label>
+```
+
+### Error Messages
+
+Associate error messages with inputs:
+
+```tsx
+<label htmlFor="email">Email</label>
+<input
+  id="email"
+  type="email"
+  aria-invalid={hasError}
+  aria-describedby={hasError ? "email-error" : undefined}
+/>
+{hasError && (
+  <span id="email-error" role="alert">
+    Please enter a valid email address
+  </span>
+)}
+```
+
+### Required Fields
+
+```tsx
+// ✅ Indicate required fields
+<label htmlFor="email">
+  Email <span aria-label="required">*</span>
+</label>
+<input
+  id="email"
+  type="email"
+  required
+  aria-required="true"
+/>
+```
+
+### Form Validation
+
+```tsx
+// Announce validation results
+<form onSubmit={handleSubmit}>
+  {/* form fields */}
+
+  {submitError && (
+    <div role="alert" aria-live="assertive">
+      {submitError}
+    </div>
+  )}
+
+  {submitSuccess && (
+    <div role="status" aria-live="polite">
+      Form submitted successfully!
+    </div>
+  )}
+</form>
+```
+
+---
+
+## 7. Image Accessibility
+
+### Alt Text Best Practices
+
+```tsx
+// ✅ Descriptive alt text
+<img
+  src="/product.jpg"
+  alt="Red leather laptop bag with brass buckles"
+/>
+
+// ✅ Decorative images - empty alt
+<img
+  src="/decorative-line.svg"
+  alt=""
+  aria-hidden="true"
+/>
+
+// ❌ Bad - Redundant text
+<img src="/icon.png" alt="Icon of a person" />
+<span>User Profile</span>
+
+// ✅ Good - Context aware
+<img src="/icon.png" alt="" aria-hidden="true" />
+<span>User Profile</span>
+```
+
+### Alt Text Guidelines
+
+- **Decorative images**: Use `alt=""` and `aria-hidden="true"`
+- **Functional images**: Describe the action (e.g., "Search" not "Magnifying glass")
+- **Complex images**: Provide longer description via `aria-describedby`
+- **Text in images**: Include all text in alt attribute
+- **Keep it concise**: Under 125 characters when possible
+
+### Next.js Image Component
+
+```tsx
+import Image from "next/image";
+
+// ✅ Always provide alt
+<Image
+  src="/hero.jpg"
+  alt="Team collaborating in modern office space"
+  width={1200}
+  height={600}
+/>;
+```
+
+---
+
+## 8. Screen Reader Compatibility
+
+### Visually Hidden Text
+
+Provide context for screen reader users:
+
+```tsx
+// CSS for sr-only class
+const VisuallyHidden = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+`;
+
+// Usage
+<button>
+  <IconTrash aria-hidden="true" />
+  <VisuallyHidden>Delete item</VisuallyHidden>
+</button>;
+```
+
+### Announce Dynamic Changes
+
+```tsx
+// Status messages
+<div role="status" aria-live="polite">
+  {itemCount} items in cart
+</div>
+
+// Error messages
+<div role="alert" aria-live="assertive">
+  {errorMessage}
+</div>
+
+// Loading states
+<div role="status" aria-live="polite" aria-busy={isLoading}>
+  {isLoading ? 'Loading...' : 'Content loaded'}
+</div>
+```
+
+---
+
+## 9. Landmark Regions
+
+Use landmarks to help screen reader users navigate:
+
+```tsx
+<body>
+  <header>
+    <nav aria-label="Main navigation">{/* primary navigation */}</nav>
+  </header>
+
+  <main>
+    <h1>Page Title</h1>
+
+    <section aria-labelledby="section-1-title">
+      <h2 id="section-1-title">Section Title</h2>
+      {/* section content */}
+    </section>
+
+    <aside aria-label="Related articles">{/* sidebar content */}</aside>
+  </main>
+
+  <footer>
+    <nav aria-label="Footer navigation">{/* footer navigation */}</nav>
+  </footer>
+</body>
+```
+
+### Multiple Landmarks of Same Type
+
+Use `aria-label` to differentiate:
+
+```tsx
+<nav aria-label="Main navigation">
+  {/* primary nav */}
+</nav>
+
+<nav aria-label="Footer navigation">
+  {/* footer nav */}
+</nav>
+```
+
+---
+
+## 10. Testing Accessibility
+
+### Automated Testing Tools
+
+1. **Lighthouse** (Chrome DevTools)
+
+   - Run: DevTools → Lighthouse → Accessibility
+   - Catches ~40% of accessibility issues
+
+2. **axe DevTools** (Browser Extension)
+
+   - More comprehensive than Lighthouse
+   - Provides detailed remediation guidance
+
+3. **WAVE** (Web Accessibility Evaluation Tool)
+   - Visual feedback on accessibility issues
+   - Browser extension available
+
+### Manual Testing Checklist
+
+- [ ] Navigate entire site using only keyboard
+- [ ] Test with screen reader (NVDA/JAWS on Windows, VoiceOver on Mac)
+- [ ] Check color contrast of all text
+- [ ] Verify all images have appropriate alt text
+- [ ] Test forms for proper labeling and error handling
+- [ ] Confirm modals trap focus properly
+- [ ] Check that all interactive elements have visible focus indicators
+- [ ] Verify ARIA attributes are used correctly
+- [ ] Test at 200% zoom level
+- [ ] Check that animations respect `prefers-reduced-motion`
+
+### Screen Reader Testing
+
+**macOS (VoiceOver):**
+
+- Turn on: Cmd + F5
+- Navigate: Control + Option + Arrow Keys
+- Read next: Control + Option + A
+
+**Windows (NVDA - Free):**
+
+- Download from nvaccess.org
+- Navigate: Arrow Keys
+- Read next: Insert + Down Arrow
+
+---
+
+## 11. Reduced Motion
+
+Respect user's motion preferences:
+
+```scss
+// Default animations
+.animated {
+  animation: slideIn 0.3s ease-out;
+}
+
+// Disable for users who prefer reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .animated {
+    animation: none;
+  }
+}
+```
+
+In styled-components:
+
+```tsx
+import styled from "styled-components";
+
+const AnimatedCard = styled.div`
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+`;
+```
+
+---
+
+## 12. Quick Reference Checklist
+
+### For Every Page
+
+- [ ] One `<h1>` per page
+- [ ] Logical heading hierarchy (no skipped levels)
+- [ ] One `<main>` landmark
+- [ ] Skip link to main content
+- [ ] Page has a descriptive title
+
+### For Interactive Elements
+
+- [ ] All interactive elements are keyboard accessible
+- [ ] Focus indicators are visible
+- [ ] Buttons use `<button>`, links use `<a>`
+- [ ] Click handlers also respond to Enter/Space keys
+
+### For Forms
+
+- [ ] Every input has an associated label
+- [ ] Required fields are marked
+- [ ] Error messages are associated with inputs
+- [ ] Validation results are announced
+
+### For Images
+
+- [ ] All images have alt attributes
+- [ ] Decorative images use `alt=""`
+- [ ] Alt text is descriptive and concise
+
+### For Color & Contrast
+
+- [ ] Text meets 4.5:1 contrast ratio
+- [ ] UI components meet 3:1 contrast ratio
+- [ ] Information isn't conveyed by color alone
+
+### For Dynamic Content
+
+- [ ] Loading states are announced
+- [ ] Error messages use `role="alert"`
+- [ ] Status updates use `aria-live`
+
+---
+
+## Resources
+
+### Documentation
+
+- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+- [MDN Accessibility](https://developer.mozilla.org/en-US/docs/Web/Accessibility)
+- [WebAIM Resources](https://webaim.org/resources/)
+
+### Testing Tools
+
+- [Lighthouse](https://developer.chrome.com/docs/lighthouse)
+- [axe DevTools](https://www.deque.com/axe/devtools/)
+- [WAVE](https://wave.webaim.org/)
+- [Color Contrast Analyzer](https://www.tpgi.com/color-contrast-checker/)
+
+### Screen Readers
+
+- [NVDA (Windows - Free)](https://www.nvaccess.org/)
+- [JAWS (Windows)](https://www.freedomscientific.com/products/software/jaws/)
+- [VoiceOver (macOS/iOS - Built-in)](https://www.apple.com/accessibility/voiceover/)
+
+---
+
+## Remember
+
+> "Accessibility is not a feature, it's a fundamental aspect of web development."
+
+Building accessible applications from the start is easier than retrofitting accessibility later. Make it part of your development process, not an afterthought.

@@ -1,0 +1,86 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  width: 300px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+header p {
+  margin: 4px 0 0;
+  opacity: 0.7;
+}
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset:disabled {
+  opacity: 0.5;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.slider,
+.select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slider > span,
+.select > span {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+output {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+select {
+  font: inherit;
+  padding: 4px;
+}
+
+.manage {
+  font: inherit;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+input[type='range'] {
+  width: 100%;
+  margin: 0;
+}

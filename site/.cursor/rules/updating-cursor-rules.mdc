@@ -1,0 +1,145 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Rules for Updating Cursor Rules
+
+## Description
+
+Guidelines for AI tools to follow when updating the Cursor rules in this repository.
+
+## Pattern
+
+/.cursor/rules/\*_/_.mdc
+
+## Instructions
+
+1. **Rule Location**: Place rules in the main rules folder /.cursor/rules.
+   Name them by appending a string that is appropriate to their scope and purpose:
+   - `general-`: Rules that apply to the entire codebase
+   - `apps-`: Rules specific to applications in the monorepo
+   - `packages-`: Rules specific to shared packages
+   - `documentation-`: Rules for creating and maintaining documentation
+
+2. **Semantic Descriptions**: Each rule should include a clear description of when it should be applied. This helps AI tools understand when to use the rule and ensures consistent application across the codebase.
+
+3. **File Pattern Matching**: Use glob patterns to specify which files/folders the rule applies to. For example:
+   - `/.cursor/rules/**/*.mdc`: All cursor rule files
+   - `**/components/**/*.{js,jsx,ts,tsx}`: All component files
+   - `/apps/*/src/**/*.ts`: TypeScript files in the src directory of any app
+
+4. **Automatic Attachment**: Rules can be automatically included when matching files are referenced. This ensures that relevant rules are always considered when working with specific files.
+
+5. **Reference Files**: Use `@file` in your project rules to include them as context when the rule is applied. For example:
+
+   ```markdown
+   @file /path/to/reference/file.ts
+   ```
+
+   This allows you to chain multiple rules together by referencing other rule files. When one rule references another, both rules will be applied when the pattern matches.
+
+6. **Rule Format**: Each rule file should follow this format and use the .mdc extension (only cursor rule files should use .mdc extension):
+
+   ```markdown
+   # Rule Name
+
+   ## Description
+
+   Brief description of what this rule enforces.
+
+   ## Pattern
+
+   The pattern this rule applies to (file glob, directory, etc.).
+
+   ## Instructions
+
+   Clear instructions for AI tools to follow when working with files that match this pattern.
+
+   ## Examples
+
+   Examples of correct and incorrect implementations.
+   ```
+
+7. **Rule Naming**: Use descriptive names for rule files that indicate their purpose:
+   - `package-imports.mdc`: Rules for importing packages
+   - `component-structure.mdc`: Rules for structuring components
+   - `documentation-standards.mdc`: Rules for documentation
+
+8. **Rule Updates**: When updating existing rules:
+   - Maintain the same format
+   - Document the changes in the commit message
+   - Update any related documentation
+   - Ensure the rule is clear and actionable
+
+9. **Rule Consistency**: Ensure rules are consistent with each other and with the project's coding standards.
+
+10. **Rule Documentation**: Update the README.mdc file in the rules directory if the structure or organization of rules changes.
+
+## Examples
+
+### Good Rule Update
+
+When updating a rule, maintain the format and ensure the instructions are clear:
+
+````markdown
+# Component Structure
+
+## Description
+
+Rules for structuring components in the 77-projects repository.
+
+## Pattern
+
+**/components/**/\*.{js,jsx,ts,tsx}
+
+## Instructions
+
+1. Each component should have:
+   - A clear, descriptive name
+   - A focused purpose
+   - Proper TypeScript types
+   - Documentation in a README.md file (not .mdc, as .mdc is only for cursor rules)
+   - Documentation in a .cursor directory for AI tools
+
+2. Component files should be organized as follows:
+   - Import statements at the top
+   - Component definition
+   - TypeScript types
+   - Export statement
+
+3. Complex components should be broken down into smaller, reusable components.
+
+4. Components should follow the project's design system guidelines.
+
+## Examples
+
+### Good Component Structure
+
+```jsx
+import React from 'react';
+import { SomeComponent } from 'some-package';
+
+type MyComponent = {
+   prop1: string;
+   prop2: number;
+};
+
+const MyComponent = ({ prop1, prop2 }) => {
+  // Component logic
+  return (
+    <div>
+      <SomeComponent prop1={prop1} />
+      {prop2}
+    </div>
+  );
+};
+
+export default MyComponent;
+```
+````
+
+```
+
+```

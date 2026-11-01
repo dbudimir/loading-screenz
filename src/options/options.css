@@ -1,0 +1,174 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  --border: color-mix(in srgb, currentColor 20%, transparent);
+  --muted: color-mix(in srgb, currentColor 65%, transparent);
+  --accent: #3b82f6;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+header p {
+  margin: 8px 0 0;
+  max-width: 640px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+button {
+  font: inherit;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+button.danger {
+  color: #ef4444;
+}
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.dropzone p {
+  margin: 0;
+}
+
+.dropzone-label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dropzone.dragging {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.errors {
+  margin: 0;
+  padding: 12px 12px 12px 32px;
+  border-radius: 8px;
+  color: #ef4444;
+  background: color-mix(in srgb, #ef4444 10%, transparent);
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #000;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 15px;
+  padding: 4px 0;
+}
+
+.name {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 3px 6px;
+  margin: 0 -6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+}
+
+.name:hover,
+.name:focus {
+  border-color: var(--border);
+}
+
+.meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

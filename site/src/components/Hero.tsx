@@ -1,0 +1,153 @@
+'use client';
+
+import { useState } from 'react';
+import styled from 'styled-components';
+import { LOADERS } from '@/lib/loaders';
+import InstallButton from './InstallButton';
+import LoaderVideo from './LoaderVideo';
+
+const Screen = styled.section`
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 18px;
+  padding: 16px;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Feature = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const Monitor = styled.div`
+  position: relative;
+`;
+
+const NowLoading = styled.span`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+`;
+
+const Headline = styled.h1`
+  font-size: clamp(26px, 4.4vw, 40px);
+  line-height: 1.02;
+`;
+
+const Pitch = styled.p`
+  max-width: 520px;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  .lz-button:not(.lz-button--primary) {
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    text-decoration: none;
+  }
+`;
+
+const Lineup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const LineupItem = styled.button<{ $active: boolean }>`
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid ${({ $active }) => ($active ? 'var(--lz-accent)' : 'transparent')};
+  border-radius: 6px;
+  background: ${({ $active }) => ($active ? 'rgb(140 198 63 / 0.12)' : 'transparent')};
+  box-shadow: ${({ $active }) => ($active ? '0 0 10px var(--lz-accent-glow)' : 'none')};
+  color: var(--lz-screen-text);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--lz-accent-dark);
+  }
+
+  .lz-tile-frame {
+    padding: 3px 3px 6px;
+  }
+
+  .lz-tile-frame::after {
+    display: none;
+  }
+`;
+
+const ItemText = styled.span`
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+`;
+
+const Hero = () => {
+  const [selected, setSelected] = useState(LOADERS[0]);
+
+  return (
+    <Screen id="top" className="lz-screen lz-texture-space">
+      <Feature>
+        <Monitor className="lz-tile-frame">
+          <NowLoading className="lz-led">NOW LOADING: {selected.name.toUpperCase()}</NowLoading>
+          <LoaderVideo id={selected.id} name={selected.name} autoPlay />
+        </Monitor>
+        <Headline className="lz-display">Every click is a loading screen.</Headline>
+        <Pitch className="lz-text">
+          <strong className="lz-heading">Loading Screens:</strong> We've pined. We've yearned. We've stared at blank
+          white pages waiting for the web to load. No longer! The greatest boot-ups and loading screens in gaming
+          history now play right in your browser, every time you click a link. The web will never be the same.
+        </Pitch>
+        <Actions>
+          <InstallButton size="large" label="Install Free for Chrome" />
+          <a className="lz-button" href="#screens">
+            See the screens
+          </a>
+        </Actions>
+        <p className="lz-fine">Also works in Edge, Brave, Arc, Opera, and Vivaldi. Chrome 120 or newer.</p>
+      </Feature>
+
+      <Lineup aria-label="The lineup">
+        <p className="lz-heading">
+          The lineup <span className="lz-badge lz-badge--hot">Hot</span>
+        </p>
+        {LOADERS.slice(0, 6).map(loader => (
+          <LineupItem
+            key={loader.id}
+            type="button"
+            $active={loader.id === selected.id}
+            aria-pressed={loader.id === selected.id}
+            onClick={() => setSelected(loader)}
+          >
+            <span className="lz-tile-frame">
+              <LoaderVideo id={loader.id} name={loader.name} />
+            </span>
+            <ItemText>
+              <span className="lz-heading">{loader.name}:</span>
+              <span className="lz-fine">{loader.blurb}</span>
+            </ItemText>
+          </LineupItem>
+        ))}
+        <a className="lz-fine" href="#screens">
+          + {LOADERS.length - 6} more in the gallery
+        </a>
+      </Lineup>
+    </Screen>
+  );
+};
+
+export default Hero;

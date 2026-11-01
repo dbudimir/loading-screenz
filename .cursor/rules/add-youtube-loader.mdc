@@ -1,0 +1,48 @@
+---
+description: Adding a YouTube video as a built-in loading screen. Use when the user sends a YouTube link to add, process, or turn into a loader.
+alwaysApply: false
+---
+
+# Adding a YouTube video as a built-in loading screen
+
+## 1. Inspect
+
+```bash
+pnpm youtube "<url>" --inspect
+```
+
+Downloads to `/tmp/loading-screenz/<youtube-id>/` (cached), prints title, uploader, length, resolution, black stretches, and a suggested `--start`/`--end`. Read `overview.png`, `start.png`, and `end.png` with the Read tool before choosing trims.
+
+- Trim dead black, uploader intros, end cards, and the black frame many captures end on.
+- Keep fades from black that are part of the animation (GameCube and Xbox fade in). The suggestion trims all edge black, so check the sheets.
+- Keep black bars around 4:3 footage (GTA: San Andreas) when key elements like a loading bar sit near the edges: the player fills the screen, so cropping the bars would cut those off.
+- Over 15s gets sped up to fit. If only part is iconic, trim to it instead.
+
+## 2. Encode
+
+```bash
+pnpm youtube "<url>" --id <id> [--start s] [--end s] [--no-audio]
+```
+
+Writes `public/media/<id>.mp4`. Read `result.png` to confirm the trims. Aim for under ~500 KB. If far over, first try `--height 720` (soft or upscaled sources lose nothing), then raise `--crf`. Busy particle footage like Crash Bandicoot can stay around 700 KB.
+
+## 3. Register and document
+
+- `src/shared/loaders.ts`: add to `BUILT_IN_LOADERS` with `category: 'game'` (in-game loading screen) or `'console'` (console/system startup). Add `vignette: false` for light backgrounds.
+- `README.md`, five places:
+  - features line listing the built-ins
+  - row in the "Game loading screens" or "Console startups" table under "Built-in loading screens" (length, `1080p30`, size, credit link)
+  - the publishing note listing the built-in videos
+  - credits under Acknowledgments, with a trademark note
+- `docs/loading-screen-ideas.md`: tick the idea if listed, add a row to the "Added" table.
+
+Credit the uploader the script prints, e.g. `Dreamcast startup capture by [pixer](https://www.youtube.com/watch?v=jCcm4uxyfcs). Dreamcast is a trademark of Sega.`
+
+## 4. Verify and stage
+
+```bash
+pnpm typecheck && pnpm build
+git add README.md docs public src scripts package.json
+```
+
+Stage by path (`git add -A` has hung in this repo). Never commit unless asked. Report length, size, trims, and category.

@@ -1,0 +1,296 @@
+# Git Commit and Push Workflow
+
+## Description
+
+Rules for committing and pushing code in the 77-projects repository. This ensures all validation checks pass before code can be pushed to remote.
+
+## Pattern
+
+\*_/_.{js,jsx,ts,tsx,json,md}
+
+## Instructions
+
+### Pre-Push Validation Process
+
+**CRITICAL**: This repository has a pre-push hook (`.husky/pre-push`) that runs extensive validation checks. These checks **MUST** pass before any code can be pushed to the remote repository.
+
+**IMPORTANT**: This repository also requires all commits to be signed with GPG or SSH keys to ensure authenticity. See `.cursor/rules/general-commit-signing-setup.mdc` for detailed setup instructions.
+
+### The Three Pre-Push Checks
+
+When you attempt to push code, the following checks run automatically:
+
+#### 1. Environment Validation Checks
+
+```bash
+pnpm exec bun tools/platform-tools/src/scripts/post-install
+```
+
+- Ensures environment is properly configured
+
+#### 2. Conflict Check
+
+```bash
+pnpm check:conflict
+```
+
+- Detects if the branch would create merge conflicts with main
+- Prevents pushing branches that will conflict
+
+#### 3. Code Quality Checks
+
+This runs comprehensive checks:
+
+- **Type checking**: TypeScript type checking on all affected files
+- **Linting**: ESLint on all affected files in the branch
+- **Workspace cleanliness**: Ensures no uncommitted changes exist
+
+### Common Failure Reasons
+
+#### TypeScript Errors
+
+```bash
+# Check types manually before committing
+pnpm run check:types
+```
+
+Fix by:
+
+- Resolving TypeScript compilation errors
+- Adding proper type annotations
+- Fixing import paths
+
+#### Linting Errors
+
+```bash
+# Check linting manually before committing
+pnpm run lint
+```
+
+Fix by:
+
+- Running `pnpm lint --fix` to auto-fix issues
+- Manually fixing remaining lint errors
+- Following ESLint rules and project conventions
+
+#### Uncommitted Changes
+
+The workspace check will fail if there are uncommitted changes (including auto-generated files).
+
+Fix by:
+
+- Commit all changes: `git add . && git commit -m "message"`
+- Or stash changes: `git stash`
+
+### Best Practices for Background Agents
+
+#### 1. Always Run Validation Before Committing
+
+```bash
+# Check if changes will pass pre-push validation
+pnpm run validate
+```
+
+If this command fails, **DO NOT commit** until issues are fixed.
+
+#### 2. Fix Type Errors Immediately
+
+When making code changes:
+
+- Run type checking: `pnpm run check:types`
+- Fix any TypeScript errors before committing
+- If adding new files, ensure they have proper types
+
+#### 3. Fix Lint Errors Automatically
+
+```bash
+# Auto-fix lint errors
+pnpm lint --fix
+```
+
+Then commit the fixes along with your changes.
+
+#### 4. Ensure All Changes Are Committed
+
+Before attempting to push:
+
+```bash
+git status  # Check for uncommitted changes
+git add .   # Stage all changes
+git commit -m "descriptive message"  # Commit everything
+```
+
+#### 5. Handle Auto-Generated Files
+
+Some operations generate files (e.g., type definitions). If the pre-push hook fails:
+
+1. Check `git status` for new/modified files
+2. Stage and commit those files
+3. Try pushing again
+
+### Workflow for Background Agents
+
+When asked to create a commit:
+
+1. **Make code changes**
+2. **Run validation checks**:
+   ```bash
+   pnpm run check:types
+   pnpm run lint
+   ```
+3. **Fix any errors** from step 2
+4. **Stage ALL changes** including auto-generated files:
+   ```bash
+   git add .
+   ```
+5. **Commit with descriptive message**:
+   ```bash
+   git commit -m "feat: descriptive commit message"
+   ```
+6. **Verify the commit succeeded**:
+   ```bash
+   git status
+   git log -1
+   ```
+
+### If Pre-Push Hook Fails
+
+When a push fails:
+
+1. **Check the error output** - The hook provides colored output explaining what failed
+2. **Run the failing check manually**:
+   - Environment: `pnpm exec bun tools/platform-tools/src/scripts/post-install`
+   - Conflicts: `pnpm check:conflict`
+   - Validation: `pnpm run validate`
+3. **Fix the issues**
+4. **Commit any new changes** (like auto-generated types)
+5. **Try pushing again**
+
+### Testing Changes Locally
+
+Before committing, you can test if your changes will pass:
+
+```bash
+# Full validation (what pre-push hook runs)
+pnpm exec bun tools/platform-tools/src/scripts/post-install && \
+pnpm check:conflict && \
+pnpm run validate
+
+# Quick validation
+pnpm run validate
+```
+
+### Commit Message Format
+
+Follow conventional commit format:
+
+- `feat: add new feature`
+- `fix: resolve bug in component`
+- `refactor: restructure module`
+- `docs: update documentation`
+- `test: add test coverage`
+- `chore: update dependencies`
+
+### Important Notes
+
+- **DO NOT** skip the pre-push hook
+- **DO NOT** use `git push --no-verify` (bypasses validation)
+- **DO** ensure all type errors are fixed before committing
+- **DO** ensure all lint errors are fixed before committing
+- **DO** commit all auto-generated files
+- **DO** run `pnpm run validate` before attempting to push
+
+### Debugging Silent Failures
+
+If commits appear to succeed but push fails silently:
+
+1. Check git status: `git status`
+2. Check recent commits: `git log -3`
+3. Try pushing manually: `git push`
+4. Check pre-push hook output for error messages
+5. Run validation manually: `pnpm run validate`
+
+The pre-push hook will show colored output:
+
+- 🚫 **RED** = Check failed
+- ⚠️ **YELLOW** = Warning
+- ✅ **GREEN** = All checks passed
+
+## Examples
+
+### Good Workflow Example
+
+```bash
+# 1. Make changes to code
+# 2. Run validation
+pnpm run validate
+
+# 3. If validation passes, commit
+git add .
+git commit -m "feat: add user profile component"
+
+# 4. Push (pre-push hook runs automatically)
+git push
+```
+
+### Bad Workflow Example
+
+```bash
+# ❌ BAD - Committing without validation
+git add .
+git commit -m "changes"
+git push  # This will fail at pre-push hook
+
+# ❌ BAD - Bypassing validation
+git push --no-verify  # Never do this!
+```
+
+### Fixing Failed Push Example
+
+```bash
+# Push fails with type errors
+git push
+# Output: "🚫 Validation checks failed!"
+
+# Fix the issue
+pnpm run check:types
+# Fix TypeScript errors in code
+
+# If new files were generated, commit them
+git add .
+git commit -m "fix: resolve type errors"
+
+# Try pushing again
+git push  # Now succeeds with "✅ All pre-push checks passed!"
+```
+
+### Background Agent Commit Pattern
+
+```bash
+# Complete pattern for background agents:
+
+# 1. Make code changes
+# ... edit files ...
+
+# 2. Run validation
+pnpm run check:types
+pnpm run lint
+
+# 3. Auto-fix lint issues
+pnpm lint --fix
+
+# 4. Stage and commit everything
+git add .
+git commit -m "feat: implement feature with proper types and linting"
+
+# 5. Verify commit
+git status  # Should show "nothing to commit, working tree clean"
+git log -1  # Should show your commit
+
+# 6. The pre-push hook will run automatically on next push
+```
+
+## Related Files
+
+- `.husky/pre-push` - The pre-push hook script
+- `package.json` - Scripts configuration

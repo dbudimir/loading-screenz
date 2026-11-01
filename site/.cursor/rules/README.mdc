@@ -1,0 +1,92 @@
+---
+description: Overview of cursor rules for the 77-projects repository, including structure and best practices for AI tools
+globs:
+alwaysApply: false
+---
+
+# Cursor Rules for 77-projects
+
+This directory contains rules for AI tools (like Cursor and Devin) working with the 77-projects repository. These rules help ensure consistent and high-quality code and documentation across the project.
+
+## Purpose of Cursor Rules
+
+The `.cursor` directories throughout this repository contain documentation that helps AI tools understand the codebase structure, patterns, and design decisions. These files serve several purposes:
+
+1. **Knowledge Preservation**: Document design decisions, patterns, and architectural choices
+2. **Context Sharing**: Provide context about how components interact with each other
+3. **Onboarding Assistance**: Help new developers (human or AI) understand the codebase faster
+4. **Maintenance Support**: Make future maintenance easier by explaining complex or non-obvious code
+
+## Rules Structure
+
+The rules are organized as follows:
+
+- `.cursor/README.mdc`: This overview document explaining cursor rules
+- `.cursor/ai-documentation-guidelines.mdc`: Guidelines for AI tools creating documentation in the codebase
+- `.cursor/component-structure.mdc`: Rules for structuring React components in the repository
+- `.cursor/documentation-standards.mdc`: Standards for creating and maintaining documentation
+- `.cursor/general-git-commit-workflow.mdc`: Rules for committing and pushing code with pre-push validation
+- `.cursor/package-imports.mdc`: Rules for importing packages and modules in the monorepo
+- `.cursor/page-component-testing.mdc`: Guide to testing page components with Redux dependencies
+- `.cursor/updating-cursor-rules.mdc`: Instructions for updating these cursor rules
+
+Additional rules may be added in the future as the project evolves. Rules may also exist in `.cursor` directories throughout the repository specific to certain components or modules.
+
+## Rule Format
+
+Each rule file should follow this format and use the .mdc extension:
+
+```markdown
+# Rule Name
+
+## Description
+
+Brief description of what this rule enforces.
+
+## Pattern
+
+The pattern this rule applies to (file glob, directory, etc.).
+
+## Instructions
+
+Clear instructions for AI tools to follow when working with files that match this pattern.
+
+## Examples
+
+Examples of correct and incorrect implementations.
+```
+
+## Updating Rules
+
+When updating these rules:
+
+1. Place rules in the `.cursor` directory at the repository root
+2. Follow the format specified in the Cursor documentation (see `updating-cursor-rules.mdc`)
+3. Ensure rules are clear, concise, and actionable
+4. Update this README.mdc file when adding or removing rule files
+5. Document any changes in the commit message
+6. Use the `.mdc` extension for cursor rule files (not for other documentation)
+
+## When to Create or Update Rules
+
+AI tools should create or update cursor rules when:
+
+1. Creating new components, modules, or patterns that introduce conventions
+2. Making significant architectural or structural changes to the codebase
+3. Implementing complex logic that may be difficult to understand
+4. Establishing new testing patterns or practices
+5. Implementing workarounds or temporary solutions that need to be documented
+6. Adding new workflow requirements (like commit signing, pre-push hooks, etc.)
+
+## Rule Best Practices
+
+1. **Be Concise**: Focus on the most important information
+2. **Use Examples**: Include code examples where helpful
+3. **Explain Why, Not Just What**: Document the reasoning behind decisions
+4. **Keep Updated**: Update rules when the code changes
+5. **Cross-Reference**: Link to related rules when appropriate
+6. **Target the Right Audience**: Remember that .cursor files are for AI tools, while README.md files are for developers
+
+For more information on Cursor rules, see the [Cursor Documentation](https://docs.cursor.com/context/rules-for-ai).
+
+Note: Only cursor rule files should use the .mdc extension. Other documentation files like README.md files for components and applications should continue to use the .md extension.

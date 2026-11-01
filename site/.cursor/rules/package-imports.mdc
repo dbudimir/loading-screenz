@@ -1,0 +1,51 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Package Import Rules
+
+## Description
+
+Rules for importing packages in the 77-projects monorepo.
+
+## Pattern
+
+\*_/_.{js,jsx,ts,tsx}
+
+## Instructions
+
+1. Always use the package name directly when importing, not direct paths to node_modules:
+
+   ```javascript
+   // CORRECT
+   const { someModule } = require("package-name/path/to/module");
+   import { someModule } from "package-name/path/to/module";
+
+   // INCORRECT
+   const {
+     someModule,
+   } = require("../../node_modules/package-name/path/to/module");
+   import { someModule } from "../../node_modules/package-name/path/to/module";
+   ```
+
+2. For packages within the monorepo, ensure they are properly defined in the package.json before importing them.
+
+3. The pnpm workspace configuration handles resolving imports between packages.
+
+## Examples
+
+### Correct
+
+```javascript
+import { Button } from "77-projects/components";
+const { utils } = require("77-projects/core/utils");
+```
+
+### Incorrect
+
+```javascript
+import { Button } from "../../node_modules/77-projects/components";
+const { utils } = require("../../node_modules/77-projects/core/utils");
+```

@@ -1,0 +1,33 @@
+/* Theme-independent tokens. Themes set colors, gradients, and textures in themes/<theme>.css. */
+:root {
+  --lz-font-body: Verdana, Tahoma, 'DejaVu Sans', sans-serif;
+  --lz-font-label: 'Trebuchet MS', Verdana, sans-serif;
+  --lz-font-display: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+  --lz-font-mono: 'Lucida Console', Monaco, monospace;
+
+  --lz-text-xs: 10px;
+  --lz-text-sm: 11px;
+  --lz-text-md: 12px;
+  --lz-text-lg: 15px;
+  --lz-text-xl: 20px;
+  --lz-text-display: 30px;
+
+  --lz-space-1: 2px;
+  --lz-space-2: 4px;
+  --lz-space-3: 6px;
+  --lz-space-4: 10px;
+  --lz-space-5: 14px;
+  --lz-space-6: 20px;
+
+  --lz-radius-sm: 3px;
+  --lz-radius-md: 6px;
+  --lz-radius-lg: 14px;
+  --lz-radius-pill: 999px;
+
+  /* Bevels: a light top edge and dark bottom edge make a surface look raised, and the reverse makes it sunken. */
+  --lz-bevel-raised: inset 0 1px 0 rgb(255 255 255 / 0.75), inset 0 -1px 0 rgb(0 0 0 / 0.35),
+    0 1px 2px rgb(0 0 0 / 0.45);
+  --lz-bevel-pressed: inset 0 2px 3px rgb(0 0 0 / 0.45), inset 0 -1px 0 rgb(255 255 255 / 0.25);
+  --lz-bevel-sunken: inset 0 1px 3px rgb(0 0 0 / 0.55), 0 1px 0 rgb(255 255 255 / 0.5);
+  --lz-gloss: linear-gradient(180deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0.12) 48%, transparent 52%);
+}

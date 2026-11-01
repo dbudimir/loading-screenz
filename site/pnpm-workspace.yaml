@@ -1,0 +1,3 @@
+# Makes site/ its own pnpm project, separate from the extension at the repo root.
+allowBuilds:
+  sharp: true

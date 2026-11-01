@@ -1,0 +1,144 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+---
+
+description: "Testing Page Components"
+globs: ["**/*.test.tsx"]
+
+---
+
+# Testing Page Components
+
+## Using `renderInApp` for Pages and Components with Redux Dependencies
+
+When testing page components or any components that require access to Redux state or root-level providers (like theme providers), you should use the `renderInApp` helper function. This function sets up a complete test environment with:
+
+1. A configured Redux store with all necessary reducers
+2. Middleware for Redux actions, including API middleware
+3. Theme providers and other root-level context providers
+4. Action recording for verifying dispatched actions
+
+Example usage:
+
+```javascript
+const { actions } = renderInApp(<PageComponent />, {
+  initialState: customInitialState,
+  shouldUseActualReducers: true, // Use this when you need the actual reducer logic
+});
+```
+
+The `renderInApp` function returns an enhanced version of the standard React Testing Library render result, including:
+
+- The Redux store instance
+- An `actions` array containing all dispatched Redux actions during the test
+
+## Testing Dispatched Actions
+
+One of the most important aspects of testing page components is verifying that the correct Redux actions are dispatched in response to user interactions or component lifecycle events. The `renderInApp` function makes this easy by capturing all dispatched actions.
+
+### Checking for Specific Actions
+
+```javascript
+// Test that a specific action was dispatched
+expect(actions).toContainEqual(
+  expect.objectContaining({
+    type: "auth/sendSmsOtpPublic/pending",
+    meta: expect.objectContaining({
+      arg: { loginId: TEST_PHONE_NUMBER },
+      requestStatus: "pending",
+    }),
+  }),
+);
+
+// Test that an action was NOT dispatched
+expect(actions).not.toContainEqual(
+  expect.objectContaining({
+    type: "auth/sendSmsOtpPublic/pending",
+  }),
+);
+
+// Test that an action was dispatched multiple times
+expect(
+  actions.filter(
+    action =>
+      action.type === "auth/sendSmsOtpPublic/pending" &&
+      action.meta?.arg?.loginId === TEST_PHONE_NUMBER,
+  ),
+).toHaveLength(2);
+```
+
+### Testing Action Flow
+
+Your tests should verify the complete action flow, including:
+
+1. Initial rendering behavior
+2. Actions triggered on component mount (if applicable)
+3. Actions dispatched in response to user interactions
+4. Success/failure handling of asynchronous actions
+
+## Setting Up Initial State
+
+The `renderInApp` function allows you to provide custom initial state to test different scenarios:
+
+```javascript
+const customState = {
+  ...defaultInitialRootState,
+  fusionAuth: {
+    signUpPhone: TEST_PHONE_NUMBER,
+  },
+};
+
+renderInApp(<PageClient />, { initialState: customState });
+```
+
+This lets you test how your component behaves with different starting states without having to manually trigger actions to reach those states.
+
+## Testing User Interactions
+
+Use React Testing Library's `userEvent` to simulate user interactions that should trigger Redux actions:
+
+```javascript
+const nextButton = screen.getByRole("button", { name: "Next" });
+await userEvent.click(nextButton);
+
+// Verify the action was dispatched in response to the click
+expect(actions).toContainEqual(
+  expect.objectContaining({
+    type: "expectedAction/pending",
+  }),
+);
+```
+
+## Mocking External Dependencies
+
+For tests to run consistently, mock external dependencies like navigation hooks:
+
+```javascript
+jest.mock("77-projects/browser/navigation", () => ({
+  useSearchParams: jest.fn(() => ({
+    get: () => null,
+  })),
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+  })),
+}));
+```
+
+This ensures your tests focus on the component's behavior without being affected by external systems.
+
+## Testing with Actual Reducers
+
+For more complex integration tests, you can use the actual reducers to verify the complete Redux flow:
+
+```javascript
+renderInApp(<PageClient />, {
+  initialState: customState,
+  shouldUseActualReducers: true,
+});
+```
+
+This is useful when testing components that rely on specific reducer logic to update the UI based on action results.

@@ -1,0 +1,567 @@
+---
+description: Guidelines for customizing 77-projects applications for specific clients and their brand requirements
+globs:
+alwaysApply: false
+---
+
+# Client Customization Guide
+
+## Description
+
+This guide provides step-by-step instructions for adapting a 77-projects Next.js application to meet specific client requirements, including branding, theming, fonts, and configuration.
+
+**Important:** This is a **manually applied** rule. Add this to your project's `.cursor/rules/` directory when starting work for a new client.
+
+## Quick Start
+
+When starting a new client project, navigate to `/dev/todo` in your browser (development mode only) to see a complete checklist of customization tasks. Check off items as you complete them.
+
+---
+
+## 1. Color Theming & Brand Colors
+
+### Update Color Palette
+
+All color definitions are centralized in `src/styles/main.css`. Update the `--color-*` CSS variables with the client's brand colors:
+
+```css
+/* Location: src/styles/main.css */
+/* Find the :root color variables and update values: */
+
+:root {
+  --color-primary: #3b82f6; /* Client's primary brand color */
+  --color-primary-hover: #2563eb; /* Darker shade for hover states */
+  --color-secondary: #64748b; /* Client's secondary color */
+  --color-background: #ffffff; /* Main background color */
+  --color-surface: #f8fafc; /* Card/surface background */
+  --color-text: #1e293b; /* Primary text color */
+  --color-text-muted: #64748b; /* Secondary/muted text */
+  --color-border: #e2e8f0; /* Border color */
+  --color-error: #ef4444; /* Error state color */
+  --color-success: #22c55e; /* Success state color */
+  --color-warning: #f59e0b; /* Warning state color */
+}
+```
+
+### Finding Client Colors
+
+**From brand guidelines:**
+
+- Request the client's brand style guide
+- Look for primary, secondary, and accent colors
+- Note exact hex codes
+
+**From existing website:**
+
+- Use browser DevTools inspector
+- Use ColorZilla or similar color picker extensions
+- Take screenshots and use design tools to extract colors
+
+**Creating hover states:**
+
+- Primary hover should be 10-15% darker than primary
+- Test contrast ratios (see Accessibility guide)
+- Use tools like [0to255.com](https://www.0to255.com/) to find shades
+
+### Color Contrast Validation
+
+After updating colors, verify WCAG contrast requirements:
+
+```bash
+# Check that text on backgrounds meets 4.5:1 ratio
+# Use browser DevTools Lighthouse or contrast checker tools
+```
+
+**Required ratios:**
+
+- Normal text on background: 4.5:1 minimum
+- Large text (18pt+): 3:1 minimum
+- UI components: 3:1 minimum
+
+---
+
+## 2. Typography & Fonts
+
+### Adding Google Fonts
+
+Update `src/app/layout.tsx` to import client's fonts:
+
+```tsx
+// Location: src/app/layout.tsx
+
+import { Inter, Roboto, Open_Sans } from "next/font/google";
+
+// Configure primary font
+const primaryFont = Inter({
+  variable: "--font-primary",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+// Configure secondary font (if needed)
+const secondaryFont = Roboto({
+  variable: "--font-secondary",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+});
+
+// Apply in body tag
+<body className={`${primaryFont.variable} ${secondaryFont.variable}`}>
+  <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+</body>;
+```
+
+### Using Custom/Licensed Fonts
+
+For custom fonts (not available on Google Fonts):
+
+1. **Add font files to `/public/fonts/`**:
+
+   ```
+   /public/fonts/
+     CustomFont-Regular.woff2
+     CustomFont-Bold.woff2
+   ```
+
+2. **Define @font-face in `src/styles/main.css`**:
+
+   ```css
+   @font-face {
+     font-family: "Custom Font";
+     src: url("/fonts/CustomFont-Regular.woff2") format("woff2");
+     font-weight: 400;
+     font-style: normal;
+     font-display: swap;
+   }
+
+   @font-face {
+     font-family: "Custom Font";
+     src: url("/fonts/CustomFont-Bold.woff2") format("woff2");
+     font-weight: 700;
+     font-style: normal;
+     font-display: swap;
+   }
+   ```
+
+3. **Update CSS variables**:
+   ```css
+   :root {
+     --font-primary: "Custom Font", system-ui, sans-serif;
+   }
+   ```
+
+### Font Guidelines
+
+- **Always include fallback fonts**: `'Primary Font', system-ui, sans-serif`
+- **Use `font-display: swap`**: Prevents invisible text during font load
+- **Subset fonts**: Include only needed character sets (usually "latin")
+- **Optimize weights**: Only include font weights you'll actually use
+- **Test loading**: Check font loading on slow connections
+
+---
+
+## 3. Metadata & SEO
+
+### Update Site Metadata
+
+Edit `src/app/layout.tsx` to reflect client information:
+
+```tsx
+// Location: src/app/layout.tsx
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://client-domain.com"), // ← Update URL
+  title: {
+    default: "Client Company Name", // ← Update
+    template: "Client Company Name | %s", // ← Update
+  },
+  description: "Client's business description and value proposition.", // ← Update
+  keywords: ["client industry", "services", "location"], // ← Update
+  authors: [{ name: "Client Company Name" }], // ← Update
+  creator: "Your Agency Name",
+  publisher: "Client Company Name",
+  robots: {
+    index: true, // Set false for staging sites
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/", // Resolved against metadataBase
+    siteName: "Client Company Name", // ← Update
+    title: "Client Company Name - Tagline", // ← Update
+    description: "Client's business description.", // ← Update
+  },
+  alternates: {
+    canonical: "/", // Resolved against metadataBase
+  },
+  // Icons and the OG image come from src/app/icon.svg and src/app/opengraph-image.tsx (see section 4)
+};
+```
+
+### Metadata Checklist
+
+- [ ] Update `metadataBase` with production URL
+- [ ] Set descriptive page title
+- [ ] Write compelling description (150-160 characters)
+- [ ] Add relevant keywords
+- [ ] Update OpenGraph title and description
+- [ ] Set correct canonical URL
+- [ ] Verify robots settings (noindex for staging!)
+
+---
+
+## 4. Favicons & Brand Assets
+
+### Favicons and App Icons
+
+New projects use Next.js file conventions in `src/app/`, so no `icons` metadata is needed:
+
+- `icon.svg` - generated placeholder with the project initial; replace with the client icon
+- `favicon.ico` - optional, add for older browsers (32x32)
+- `apple-icon.png` - optional, 180x180 for iOS home screens
+
+**Recommended tool**: [RealFaviconGenerator](https://realfavicongenerator.net/) to export the sizes above.
+
+### Open Graph Image
+
+`src/app/opengraph-image.tsx` generates a 1200x630 image with the project name. Either:
+
+- Edit it to use the client's colors, logo, and tagline, or
+- Replace it with a static `src/app/opengraph-image.png` (1200 x 630 pixels)
+
+Keep text large and readable (minimum 40px font size). Canva or Figma (1200x630 template) work well for static images.
+
+### Logo Files
+
+Store client logos in `/public/logos/`:
+
+```
+/public/logos/
+  logo.svg           (primary logo)
+  logo-white.svg     (white version for dark backgrounds)
+  logo-icon.svg      (icon only, no text)
+```
+
+---
+
+## 5. Environment Variables
+
+### Create .env.local
+
+Copy `.env.example` to `.env.local` and fill in client-specific values:
+
+```bash
+# Application
+NEXT_PUBLIC_APP_URL=https://client-domain.com
+NEXT_PUBLIC_APP_NAME=Client Company Name
+
+# Analytics (if applicable)
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+
+# API Keys (add as needed)
+NEXT_PUBLIC_API_BASE_URL=https://api.client-domain.com
+API_SECRET_KEY=secret_value_here
+
+# Third-party Services
+SENDGRID_API_KEY=SG.xxxxx
+STRIPE_SECRET_KEY=sk_live_xxxxx
+STRIPE_PUBLISHABLE_KEY=pk_live_xxxxx
+```
+
+### Environment Variable Guidelines
+
+- **Public variables**: Prefix with `NEXT_PUBLIC_` (exposed to browser)
+- **Secret variables**: No prefix (server-only)
+- **Never commit**: Keep `.env.local` out of git
+- **Document in .env.example**: Add placeholders for all required vars
+- **Production**: Set variables in hosting platform (Vercel, etc.)
+
+---
+
+## 6. API Configuration
+
+### Setting Up API Routes
+
+If the client has a backend API:
+
+1. **Create API utility** (`src/lib/api.ts`):
+
+   ```typescript
+   const API_BASE_URL =
+     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+
+   export async function fetchAPI(endpoint: string, options?: RequestInit) {
+     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+       headers: {
+         "Content-Type": "application/json",
+         ...options?.headers,
+       },
+       ...options,
+     });
+
+     if (!res.ok) {
+       throw new Error(`API Error: ${res.status}`);
+     }
+
+     return res.json();
+   }
+   ```
+
+2. **Create API types** (`src/types/api.ts`):
+   ```typescript
+   export type ApiResponse<T> = {
+     data: T;
+     success: boolean;
+     error?: string;
+   };
+   ```
+
+### API Integration Checklist
+
+- [ ] Document all API endpoints
+- [ ] Set up authentication if required
+- [ ] Create TypeScript types for API responses
+- [ ] Implement error handling
+- [ ] Add loading states
+- [ ] Test with actual API
+
+---
+
+## 7. Content Updates
+
+### Update Home Page
+
+Replace the "Hello World" placeholder in `src/app/page.tsx` with actual content:
+
+```tsx
+// Update project name constant
+const projectName = "Client Company Name";
+
+// Replace with hero section, features, etc.
+```
+
+### 404 Page Customization
+
+Update `src/app/not-found.tsx`:
+
+- Change error message tone to match client brand
+- Update button styling if needed
+- Ensure it uses client colors from theme
+
+### Loading States
+
+Review `src/app/loading.tsx`:
+
+- Update loading text if needed
+- Consider custom loading animation matching brand
+
+---
+
+## 8. robots.txt Configuration
+
+Update `src/app/robots.ts`:
+
+```typescript
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://client-domain.com";
+
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: [
+          "/api/", // Protect API routes
+          "/admin/", // Protect admin area
+          "/dev/", // Hide dev tools
+          "/private/", // Any private sections
+        ],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
+  };
+}
+```
+
+**For staging sites**, add:
+
+```typescript
+rules: [
+  {
+    userAgent: "*",
+    disallow: "/",  // Block all search engines on staging
+  },
+],
+```
+
+---
+
+## 9. Analytics & Tracking
+
+### Google Analytics Setup
+
+1. **Add environment variable**:
+
+   ```
+   NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+   ```
+
+2. **Create analytics component** (`src/components/Analytics.tsx`):
+
+   ```tsx
+   import Script from "next/script";
+
+   export function Analytics() {
+     const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
+     if (!gaId) return null;
+
+     return (
+       <>
+         <Script
+           src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+           strategy="afterInteractive"
+         />
+         <Script id="google-analytics" strategy="afterInteractive">
+           {`
+             window.dataLayer = window.dataLayer || [];
+             function gtag(){dataLayer.push(arguments);}
+             gtag('js', new Date());
+             gtag('config', '${gaId}');
+           `}
+         </Script>
+       </>
+     );
+   }
+   ```
+
+3. **Add to layout**:
+
+   ```tsx
+   import { Analytics } from "@/components/Analytics";
+
+   export default function RootLayout({ children }) {
+     return (
+       <html lang="en">
+         <body>
+           <Analytics />
+           {children}
+         </body>
+       </html>
+     );
+   }
+   ```
+
+---
+
+## 10. Development Todo Route
+
+### Accessing the Todo List
+
+Navigate to `http://localhost:7700/dev/todo` to see your customization checklist.
+
+**Features:**
+
+- ✅ Check off completed tasks
+- 📊 See progress percentage
+- 💾 Saves progress to `.dev-todo.json`
+- 🔒 Only accessible in development mode
+
+**Note:** The `.dev-todo.json` file is committed to the repository, so the entire team shares the same checklist progress.
+
+---
+
+## Quick Reference Checklist
+
+Use this as a high-level overview. For detailed tasks, visit `/dev/todo`.
+
+### Branding
+
+- [ ] Update color palette in `main.css`
+- [ ] Add client fonts to `layout.tsx`
+- [ ] Add logo files to `/public/logos/`
+
+### Metadata & Assets
+
+- [ ] Update metadata in `layout.tsx`
+- [ ] Replace `src/app/icon.svg` (and add `favicon.ico` / `apple-icon.png` if needed)
+- [ ] Create and add OG image
+
+### Configuration
+
+- [ ] Set up `.env.local` with client values
+- [ ] Configure API endpoints (if applicable)
+- [ ] Update robots.txt rules
+
+### Content
+
+- [ ] Replace home page placeholder content
+- [ ] Update 404 page messaging
+- [ ] Customize loading states
+
+### Pre-Launch
+
+- [ ] Set up analytics tracking
+- [ ] Configure deployment settings
+- [ ] Test on multiple devices
+- [ ] Run Lighthouse audit
+- [ ] Review accessibility compliance
+
+---
+
+## Tips & Best Practices
+
+### Communication with Client
+
+**Before starting:**
+
+- Request brand guidelines, logos, and color codes
+- Ask for font preferences or licenses
+- Get access to APIs and third-party services
+- Clarify content approval process
+
+**During development:**
+
+- Send staging URL for feedback
+- Document any deviations from spec
+- Ask questions early to avoid rework
+
+### Code Quality
+
+- Keep client-specific code organized
+- Document any unusual client requirements
+- Use TypeScript for type safety
+- Follow the project's existing patterns
+- Write accessible, semantic HTML
+
+### Performance
+
+- Optimize images before adding them
+- Use Next.js Image component
+- Lazy load non-critical components
+- Monitor bundle size
+- Test on slower connections
+
+---
+
+## Resources
+
+- **Accessibility Guide**: `.cursor/rules/accessibility-best-practices.mdc`
+- **Project Init Guide**: `.cursor/rules/77-projects-app-init.mdc`
+- **Dev Todo**: `http://localhost:7700/dev/todo`
+
+---
+
+## Remember
+
+> "Every client is unique. Take time to understand their brand, audience, and goals before making customization decisions."
+
+Good luck with your client project! 🚀

@@ -1,0 +1,66 @@
+/* Xbox.com, 2002–2004: brushed chrome, black deep space, and Xbox lime. Also the default theme. */
+:root,
+[data-theme='xbox'] {
+  color-scheme: dark;
+
+  --lz-accent: #8cc63f;
+  --lz-accent-bright: #c4f060;
+  --lz-accent-dark: #4b8a17;
+  --lz-accent-glow: rgb(156 230 60 / 0.65);
+  --lz-danger: #f0601e;
+  --lz-danger-dark: #a8360a;
+
+  --lz-page-bg: radial-gradient(ellipse at 50% 0%, #ffffff 0%, #e9ece9 45%, #cfd4cf 100%);
+  --lz-page-text: #4a4f4b;
+
+  --lz-chrome: linear-gradient(180deg, #ffffff 0%, #e4e7e4 22%, #b9bebb 52%, #9da39f 58%, #d8dcd9 82%, #f4f6f4 100%);
+  --lz-chrome-edge: #6f7571;
+  --lz-chrome-text: #2e322f;
+
+  --lz-screen-bg: radial-gradient(ellipse at 75% 20%, #1f3550 0%, #0b1220 38%, #020304 75%);
+  --lz-screen-text: #e8ece8;
+  --lz-screen-muted: #9aa49c;
+  --lz-heading: #8fd84a;
+  --lz-heading-glow: 0 0 8px rgb(143 216 74 / 0.45);
+  --lz-link: #9be05a;
+
+  --lz-display-fill: linear-gradient(180deg, #ffffff 0%, #dce7f2 40%, #7f9bb8 55%, #c9d8e8 100%);
+  --lz-display-stroke: #1d3550;
+
+  --lz-nav-bg: linear-gradient(180deg, #4a4d4b 0%, #1d1f1e 50%, #050606 51%, #1a1c1b 100%);
+  --lz-nav-text: #f2f2f2;
+  --lz-nav-divider: #5d625f;
+  --lz-nav-active-bg: linear-gradient(180deg, #c8ee8a 0%, #8cc63f 50%, #6aa52a 51%, #93cc4c 100%);
+  --lz-nav-active-text: #ffffff;
+  --lz-rail: linear-gradient(180deg, #d9f2b0 0%, #a5d465 50%, #86bd45 100%);
+
+  --lz-bar-bg: linear-gradient(180deg, #d7e0e6 0%, #a8b8c4 48%, #8a9dab 52%, #b3c2cc 100%);
+  --lz-bar-text: #ffffff;
+  --lz-bar-text-shadow: 1px 1px 0 #3e5262, -1px -1px 0 #3e5262, 1px -1px 0 #3e5262, -1px 1px 0 #3e5262;
+
+  --lz-panel-bg: rgb(255 240 222 / 0.82);
+  --lz-panel-border: rgb(150 120 90 / 0.4);
+  --lz-panel-text: #242424;
+  --lz-panel-link: #3f8f12;
+
+  --lz-tile-frame: linear-gradient(180deg, #dcecfb 0%, #8db8e6 45%, #4f84c4 55%, #86b2e2 100%);
+  --lz-tile-edge: #2f5f99;
+  --lz-tile-caption: #3f8f12;
+
+  --lz-button-bg: linear-gradient(180deg, #ffffff 0%, #e8ebe8 45%, #c7ccc8 55%, #e6e9e6 100%);
+  --lz-button-text: #2e322f;
+  --lz-button-edge: #7d837f;
+  --lz-button-primary-bg: linear-gradient(180deg, #d7f5a0 0%, #9fd858 45%, #72b02c 55%, #9ad452 100%);
+  --lz-button-primary-text: #ffffff;
+  --lz-button-primary-edge: #437a14;
+
+  --lz-field-bg: #f7f8f7;
+  --lz-field-text: #1d1f1e;
+  --lz-field-edge: #8a908c;
+
+  --lz-led-bg: #071005;
+  --lz-led-text: #b8ff4a;
+  --lz-led-glow: 0 0 6px rgb(184 255 74 / 0.8);
+
+  --lz-plastic-tint: rgb(140 198 63 / 0.35);
+}

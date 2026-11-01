@@ -1,0 +1,130 @@
+---
+description:
+globs:
+---
+
+# AI Documentation Guidelines for 77-projects
+
+This document provides guidelines for AI tools working with the 77-projects repository to ensure consistent and helpful documentation is created during development.
+
+## Purpose of .cursor Files
+
+The `.cursor` directories throughout this repository contain documentation that helps AI tools understand the codebase structure, patterns, and design decisions. These files serve several purposes:
+
+1. **Knowledge Preservation**: Document design decisions, patterns, and architectural choices
+2. **Context Sharing**: Provide context about how components interact with each other
+3. **Onboarding Assistance**: Help new developers (human or AI) understand the codebase faster
+4. **Maintenance Support**: Make future maintenance easier by explaining complex or non-obvious code
+
+## Documentation Structure
+
+When creating or updating `.cursor` files:
+
+1. **Location**: Place `.cursor` directories at the appropriate level of specificity:
+   - Repository root: For project-wide patterns and architecture
+   - Application directories: For app-specific patterns
+   - Component directories: For component-specific details
+
+   **Important**: Always prioritize .cursor files closest to where you are working. For example:
+   - When working on GitHub Actions, focus on .cursor files in the .github directory
+   - When working on components, focus on .cursor files in the component directory
+   - When working on pages, focus on .cursor files in the page directory
+
+2. **File Naming**: Use descriptive names that indicate the content:
+   - `architecture.md`: For high-level architecture documentation
+   - `component-name.md`: For specific component documentation
+   - `pattern-name.md`: For design pattern documentation
+
+3. **Content Organization**: Structure your documentation with clear sections:
+   - Purpose/Overview
+   - Key Components/Structure
+   - Usage Examples
+   - Important Considerations
+   - Related Components/Files
+
+## When to Create Documentation
+
+AI tools should create or update `.cursor` documentation when:
+
+1. Creating new components, modules, or patterns
+2. Making significant changes to existing code
+3. Implementing complex logic that may be difficult to understand
+4. Synchronizing configurations between applications (like CSP configurations)
+5. Implementing workarounds or temporary solutions
+
+## Documentation Best Practices
+
+1. **Be Concise**: Focus on the most important information
+2. **Use Examples**: Include code examples where helpful
+3. **Explain Why, Not Just What**: Document the reasoning behind decisions
+4. **Keep Updated**: Update documentation when the code changes
+5. **Cross-Reference**: Link to related documentation when appropriate
+6. **Reference Domain Terminology**: Use terms from the ai-domain-glossary.md consistently
+7. **Follow Architectural Patterns**: Align with patterns described in ai-architecture-guide.md
+
+## Package Import Guidelines
+
+When importing packages in this monorepo:
+
+1. **Use pnpm Package Names**: Always import using the package name, not direct paths to node_modules:
+
+   ```javascript
+   // CORRECT
+   const { someModule } = require("package-name/path/to/module");
+
+   // INCORRECT
+   const {
+     someModule,
+   } = require("../../node_modules/package-name/path/to/module");
+   ```
+
+2. **Workspace Dependencies**: For packages within the monorepo, ensure they are properly defined in the package.json before importing them
+3. **Import Resolution**: The pnpm workspace configuration handles resolving imports between packages
+
+## Creating Component-Specific AI Documentation
+
+When creating a new component or significantly modifying an existing one, consider adding a `.cursor/component-name.md` file in the component directory with:
+
+1. **Component Purpose**: What the component does and its role in the UI
+2. **Usage Patterns**: How the component should be used
+3. **Props Reference**: Description of component props and their purpose
+4. **Integration Notes**: How it integrates with other components
+5. **Edge Cases**: Special handling or limitations
+6. **Updates to Component Registry**: If it's a major component, update the ai-component-registry.md
+
+## Example Documentation
+
+````markdown
+# Component Name
+
+## Purpose
+
+Brief description of what this component does and why it exists.
+
+## Structure
+
+Description of the component's structure, key files, and how they interact.
+
+## Usage
+
+```jsx
+// Example usage code
+<ComponentName prop1="value" prop2={value} />
+```
+````
+
+## Important Considerations
+
+- Note any edge cases or limitations
+- Mention performance considerations
+- Document any dependencies or requirements
+
+## Related Components
+
+- [ComponentA](mdc:../component-a/.cursor/component-a.md)
+- [ComponentB](mdc:../component-b/.cursor/component-b.md)
+
+```
+
+By following these guidelines, AI tools can create documentation that enhances understanding of the codebase and supports efficient development and maintenance.
+```

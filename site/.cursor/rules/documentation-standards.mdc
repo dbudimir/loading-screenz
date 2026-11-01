@@ -1,0 +1,83 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Documentation Standards
+
+## Description
+
+Standards for creating and maintaining documentation in the 77-projects repository.
+
+## Pattern
+
+/.cursor/rules/**/\*.mdc, **/README.md
+
+## Instructions
+
+1. **Location**: Place documentation files at the appropriate level of specificity:
+   - Repository root: For project-wide patterns and architecture
+   - Application directories: For app-specific patterns
+   - Component directories: For component-specific details
+2. **File Naming**: Use descriptive names that indicate the content:
+   - `architecture.md`: For high-level architecture documentation
+   - `component-name.md`: For specific component documentation
+   - `pattern-name.md`: For design pattern documentation
+
+3. **Content Organization**: Structure documentation with clear sections:
+   - Purpose/Overview
+   - Key Components/Structure
+   - Usage Examples
+   - Important Considerations
+   - Related Components/Files
+
+4. **Audience**:
+   - `.cursor` files are primarily for AI tools
+   - `README.md` files are primarily for developers
+
+5. **Documentation Best Practices**:
+   - Be concise: Focus on the most important information
+   - Use examples: Include code examples where helpful
+   - Explain why, not just what: Document the reasoning behind decisions
+   - Keep updated: Update documentation when the code changes
+   - Cross-reference: Link to related documentation when appropriate
+   - Maintain consistency: Ensure consistency between .cursor files and README files
+
+## Examples
+
+### Good Documentation Example
+
+````markdown
+# Component Name
+
+## Purpose
+
+Brief description of what this component does and why it exists.
+
+## Structure
+
+Description of the component's structure, key files, and how they interact.
+
+## Usage
+
+```jsx
+// Example usage code
+<ComponentName prop1="value" prop2={value} />
+```
+````
+
+## Important Considerations
+
+- Note any edge cases or limitations
+- Mention performance considerations
+- Document any dependencies or requirements
+
+## Related Components
+
+- `@ComponentA`
+- `@ComponentB`
+
+```
+
+```

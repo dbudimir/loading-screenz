@@ -1,9 +1,15 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "target": "es6",
-    "module": "commonjs",
-    "jsx": "react"
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "types": ["chrome"],
+    "noEmit": true
   },
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

@@ -1,0 +1,901 @@
+---
+alwaysApply: false
+---
+
+# 77 Projects App Initialization Reference
+
+## Description
+
+This document serves as a **reference guide** for understanding the Next.js project structure used in 77-projects. All files documented here are automatically created by the `budi-kit new` command - you do not need to manually create them.
+
+**Note:** This is a reference document, not an execution guide. The project generator handles all file creation automatically.
+
+## Prerequisites
+
+- Node.js 18+ installed
+- pnpm package manager installed (`npm install -g pnpm`)
+- Git installed and configured
+
+## Table of Contents
+
+### Automated Creation Overview
+- [What Gets Created Automatically](#what-gets-created-automatically)
+
+### Reference Documentation
+- [Configuration Files Reference](#configuration-files-reference)
+- [Application Files Reference](#application-files-reference)
+- [Development Todo System](#development-todo-system-optional)
+- [Husky Git Hooks Reference](#husky-git-hooks-reference)
+- [Types Directory Reference](#types-directory-reference)
+- [Environment Variables Reference](#environment-variables-reference)
+- [Components Index Reference](#components-index-reference)
+- [Cursor Rules Reference](#cursor-rules-reference)
+
+### Best Practices
+- [TypeScript Guidelines](#typescript-best-practices)
+- [Verification Checklist](#verification-checklist)
+- [Post-Initialization Tasks](#post-initialization-tasks)
+
+### Additional Resources
+- [Client Customization Guide](client-customization-guide.mdc)
+- [Accessibility Best Practices](accessibility-best-practices.mdc)
+- [Development Todo System Setup](dev-todo-system.mdc) - Optional
+- Development Todo Dashboard: `http://localhost:7700/dev/todo`
+
+---
+
+## What Gets Created Automatically
+
+**Important:** When using the `budi-kit new` command, ALL files are created automatically:
+
+### Configuration Files (Static Templates)
+- `package.json` - Package configuration and dependencies
+- `.gitignore` - Git ignore patterns
+- `.npmrc` - pnpm configuration
+- `.prettierrc.json` / `.prettierignore` - Code formatting
+- `.env.example` - Environment variable template
+- `eslint.config.mjs` - Linting rules
+- `next.config.ts` - Next.js configuration
+- `tsconfig.json` - TypeScript configuration
+- `.husky/pre-commit` / `.husky/pre-push` - Git hooks
+
+### Application Files (Static Templates with Variable Substitution)
+- `src/app/layout.tsx` - Root layout with metadata
+- `src/app/page.tsx` - Home page ("Hello World")
+- `src/app/not-found.tsx` - 404 error page
+- `src/app/loading.tsx` - Loading state component
+- `src/app/robots.ts` - SEO robots configuration
+- `src/lib/registry.tsx` - Styled-components SSR registry
+- `src/styles/main.css` - Global styles and design system
+- `src/types/index.ts` / `src/types/common.ts` - TypeScript types
+- `src/components/index.ts` - Components barrel export
+
+### Optional Components (Copied if Selected)
+- Todo system files (`/dev/todo` route)
+- Sanity CMS files (`sanity.config.ts`, `/admin/studio`)
+- Cursor rules (`.cursor/rules/*.mdc`)
+
+**No manual file creation is required.** The sections below serve as reference documentation.
+
+---
+
+## Reference: Project Structure
+
+The following sections document the files that are automatically created. Use this as a reference for understanding the project structure and making modifications.
+
+### Configuration Files Reference
+
+**Source:** `utils/project-generator/_helpers/config-templates.mjs`
+
+These configuration files are created automatically from template functions:
+
+- **`package.json`** - Package configuration and dependencies (template: `getPackageJsonContent()`)
+  - Defines project scripts, dependencies, and lint-staged configuration
+  - Configures Next.js with React 19, styled-components, and all necessary dev tools
+- **`.gitignore`** - Next.js-specific gitignore patterns (template: `getNextJsGitignoreContent()`)
+  - Ignores dependencies, build outputs, environment files, and OS artifacts
+- **`.npmrc`** - pnpm package manager configuration (template: `getNpmrcContent()`)
+  - Configures peer dependency installation behavior
+- **`.prettierrc.json`** - Code formatting rules (template: `getPrettierConfigContent()`)
+  - Enforces consistent code style across the project
+- **`.prettierignore`** - Prettier ignore patterns (template: `getPrettierIgnoreContent()`)
+  - Excludes build outputs and dependencies from formatting
+- **`.env.example`** - Environment variable template (template: `getEnvExampleContent()`)
+  - Documents required environment variables for the project
+- **`eslint.config.mjs`** - ESLint configuration (template: `getEslintConfigContent()`)
+  - Configures linting rules for TypeScript, React, and Next.js
+- **`next.config.ts`** - Next.js configuration (template: `getNextConfigContent()`)
+  - Configures Next.js compiler options, styled-components support, and image domains
+- **`tsconfig.json`** - TypeScript configuration (template: `getTsconfigContent()`)
+  - Configures TypeScript compiler options, paths, and includes for Next.js
+
+### Application Files Reference
+
+**Source:** `utils/project-generator/_features/base/files/`
+
+These application files are copied with `{{PROJECT_NAME}}` variable substitution:
+
+#### `src/lib/registry.tsx` - Styled Components SSR Registry
+
+```tsx
+"use client";
+
+import React, { useState } from "react";
+import { useServerInsertedHTML } from "next/navigation";
+import { ServerStyleSheet, StyleSheetManager } from "styled-components";
+
+export default function StyledComponentsRegistry({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
+
+  useServerInsertedHTML(() => {
+    const styles = styledComponentsStyleSheet.getStyleElement();
+    styledComponentsStyleSheet.instance.clearTag();
+    return <>{styles}</>;
+  });
+
+  if (typeof window !== "undefined") return <>{children}</>;
+
+  return (
+    <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
+      {children}
+    </StyleSheetManager>
+  );
+}
+```
+
+#### `src/app/layout.tsx` - Root Layout
+
+```tsx
+import StyledComponentsRegistry from "@/lib/registry";
+import "@/styles/main.css";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+
+// Inter is a variable font, so no weight list is needed
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Icons and the Open Graph image come from src/app/icon.svg and src/app/opengraph-image.tsx
+export const metadata: Metadata = {
+  metadataBase: new URL("https://example.com"), // Set from --domain by budi-kit new
+  title: {
+    default: "Project Name",
+    template: "Project Name | %s",
+  },
+  description: "Your project description here.",
+  keywords: ["keyword1", "keyword2", "keyword3"],
+  authors: [{ name: "Author Name" }],
+  creator: "Creator Name",
+  publisher: "Publisher Name",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "Project Name",
+    title: "Project Name - Tagline",
+    description: "Your project description here.",
+  },
+  alternates: {
+    canonical: "/",
+  },
+};
+
+// Next.js renders the viewport and charset meta tags; don't add them to <head> by hand
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className={inter.variable}>
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+      </body>
+    </html>
+  );
+}
+```
+
+#### `src/app/page.tsx` - Home Page
+
+**Important:** Create a blank home page with "Hello World" centered and the project name below it. This helps confirm that the page setup is working correctly when initially pulling up the codebase.
+
+```tsx
+"use client";
+
+import styled from "styled-components";
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+`;
+
+const HelloWorld = styled.h1`
+  font-size: var(--font-size-4xl);
+  color: var(--color-text);
+  margin-bottom: 1rem;
+`;
+
+const ProjectName = styled.p`
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  text-align: center;
+`;
+
+export default function Home() {
+  // Replace "Project Name" with the actual project name
+  const projectName = "Project Name";
+
+  return (
+    <Main>
+      <HelloWorld>Hello World</HelloWorld>
+      <ProjectName>{projectName}</ProjectName>
+    </Main>
+  );
+}
+```
+
+#### `src/app/not-found.tsx` - 404 Page
+
+```tsx
+"use client";
+
+import styled from "styled-components";
+import Link from "next/link";
+
+const NotFoundWrapper = styled.main`
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+`;
+
+const ErrorCode = styled.div`
+  font-size: var(--font-size-6xl);
+  color: var(--color-primary);
+  opacity: 0.3;
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const NotFoundTitle = styled.h1`
+  font-size: var(--font-size-4xl);
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+`;
+
+const NotFoundMessage = styled.p`
+  font-size: var(--font-size-xl);
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  max-width: 400px;
+`;
+
+const BackLink = styled(Link)`
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all var(--transition);
+  font-size: var(--font-size-lg);
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-2px);
+  }
+`;
+
+export default function NotFound() {
+  return (
+    <NotFoundWrapper>
+      <ContentContainer>
+        <ErrorCode>404</ErrorCode>
+        <NotFoundTitle>Not Found</NotFoundTitle>
+        <NotFoundMessage>
+          Sorry, we couldn&apos;t find the page you&apos;re looking for.
+        </NotFoundMessage>
+        <BackLink href="/">Go home</BackLink>
+      </ContentContainer>
+    </NotFoundWrapper>
+  );
+}
+```
+
+#### `src/styles/main.css` - Global Styles & Design System
+
+```css
+/* =============================================================================
+   DESIGN SYSTEM
+   Customize these CSS variables for your project's branding
+   ============================================================================= */
+
+:root {
+  /* Colors */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-secondary: #64748b;
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-error: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+
+  /* Breakpoints (for reference in media queries) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Spacing */
+  --padding-mobile: 1rem;
+  --padding-tablet: 1.5rem;
+  --padding-desktop: 2rem;
+
+  /* Typography */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Animation */
+  --transition: 0.2s ease-in-out;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+}
+
+/* =============================================================================
+   GLOBAL STYLES
+   ============================================================================= */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-text);
+  line-height: 1.2;
+  font-weight: var(--font-weight-semibold);
+}
+
+p,
+li,
+ul {
+  color: var(--color-text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+  width: 100%;
+  min-height: 100dvh;
+  padding: var(--padding-mobile);
+}
+
+@media (min-width: 768px) {
+  main {
+    padding: var(--padding-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  main {
+    padding: var(--padding-desktop);
+  }
+}
+```
+
+#### `src/app/loading.tsx` - Loading State for Suspense
+
+```tsx
+"use client";
+
+import styled, { keyframes } from "styled-components";
+
+const spin = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 1rem;
+`;
+
+const Spinner = styled.div`
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+`;
+
+const LoadingText = styled.p`
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+`;
+
+export default function Loading() {
+  return (
+    <LoadingWrapper>
+      <Spinner />
+      <LoadingText>Loading...</LoadingText>
+    </LoadingWrapper>
+  );
+}
+```
+
+**Note:** Copy this `loading.tsx` file to any route segment that needs its own loading state. Next.js will automatically show this component while the page content is loading.
+
+#### `src/app/robots.ts` - SEO Robots Configuration
+
+```typescript
+import { MetadataRoute } from "next";
+
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://example.com";
+
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/admin/"],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
+  };
+}
+```
+
+**Note:** Update the `disallow` array with any routes you want to exclude from search engine indexing. Add a `sitemap.ts` file when you're ready to generate a sitemap.
+
+### Development Todo System (Optional)
+
+**Source:** `utils/project-generator/_features/todo-system/files/`
+
+If selected during project creation, the dev todo system provides:
+
+- Interactive web-based checklist at `/dev/todo` (development only)
+- Client customization tracking
+- Progress saved to `.dev-todo.json` (shared with team)
+- Comprehensive task categories (branding, content, assets, configuration, quality, deployment)
+
+For more details, see: **`.cursor/rules/dev-todo-system.mdc`**
+
+### Husky Git Hooks Reference
+
+**Source:** `utils/project-generator/_helpers/logging-templates.mjs`
+
+These Git hooks are created automatically:
+
+#### `.husky/pre-commit`
+
+```bash
+echo "🚀 Running pre-commit checks..."
+pnpm exec lint-staged
+```
+
+#### `.husky/pre-push`
+
+```bash
+echo "🔍 Running pre-push checks..."
+
+# Run linting
+echo "📝 Checking ESLint rules..."
+pnpm run lint:check
+
+# Run type checking
+echo "🔧 Running TypeScript type check..."
+pnpm run type-check
+
+echo "✅ All pre-push checks passed!"
+```
+
+These hooks are automatically activated when `pnpm install` runs (via the `prepare` script).
+
+### Types Directory Reference
+
+**Source:** `utils/project-generator/_features/base/files/src/types/`
+
+#### `src/types/index.ts` - Main types export
+
+```typescript
+// Export all types from this file
+// Example:
+// export * from "./user";
+// export * from "./api";
+```
+
+#### Example type file `src/types/common.ts`
+
+```typescript
+// Common types used across the application
+
+export type ApiResponse<T> = {
+  data: T;
+  success: boolean;
+  error?: string;
+};
+
+export type AsyncStatus = "idle" | "loading" | "success" | "error";
+```
+
+### Environment Variables Reference
+
+```env
+# =============================================================================
+# Environment Variables Template
+# =============================================================================
+# Copy this file to .env.local and fill in your values
+# NEVER commit .env.local or any file containing actual secrets
+
+# Application
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_NAME=Project Name
+
+# API Keys (add as needed)
+# NEXT_PUBLIC_* variables are exposed to the browser
+# Variables without NEXT_PUBLIC_ prefix are server-only
+```
+
+#### Environment File Guidelines
+
+1. **`.env.local`** - Local development secrets (NEVER commit)
+2. **`.env.example`** - Template with placeholder values (commit this)
+3. **`.env.production`** - Production values set in deployment platform
+
+**Important Rules:**
+
+- Never commit actual API keys or secrets
+- Use `NEXT_PUBLIC_` prefix only for values safe to expose to browsers
+- Server-only secrets should NOT have the `NEXT_PUBLIC_` prefix
+- Document all required environment variables in `.env.example`
+
+### Components Index Reference
+
+**Source:** `utils/project-generator/_features/base/files/src/components/`
+
+#### `src/components/index.ts`
+
+```typescript
+// Export all components from this file for cleaner imports
+// Example:
+// export { Button } from "./Button";
+// export { Card } from "./Card";
+```
+
+### Cursor Rules Reference
+
+**Source:** `configs/.cursor/`
+
+The `.cursor/rules/` directory contains AI tool guidelines:
+
+#### `.cursor/README.mdc`
+
+```markdown
+---
+description: Overview of cursor rules for this project
+globs:
+alwaysApply: false
+---
+
+# Cursor Rules
+
+This directory contains rules for AI tools (like Cursor) working with this repository.
+
+## Purpose
+
+These files help AI tools understand:
+
+- Codebase structure and patterns
+- Design decisions and conventions
+- How components interact
+- Testing patterns and practices
+
+## Rules Structure
+
+- `.cursor/README.mdc`: This overview document
+- `.cursor/rules/`: Directory for specific rule files
+
+## Adding New Rules
+
+When adding rules:
+
+1. Place rule files in `.cursor/rules/` with `.mdc` extension
+2. Use descriptive names (e.g., `component-structure.mdc`)
+3. Include clear instructions and examples
+4. Update this README when adding new rules
+
+## Rule File Format
+
+Each rule should follow this format:
+
+## \`\`\`markdown
+
+description: Brief description of the rule
+globs: pattern/to/match/\*_/_.tsx
+alwaysApply: false
+
+---
+
+# Rule Name
+
+## Description
+
+What this rule enforces.
+
+## Instructions
+
+Clear steps for AI tools to follow.
+
+## Examples
+
+Code examples showing correct implementation.
+\`\`\`
+```
+
+#### `.cursor/rules/component-structure.mdc` (Example)
+
+```markdown
+---
+description: Rules for structuring React components
+globs: **/components/**/*.{ts,tsx}
+alwaysApply: true
+---
+
+# Component Structure
+
+## Description
+
+Guidelines for structuring React components in this project.
+
+## Instructions
+
+1. Use functional components with TypeScript
+2. Define prop types at the top of the file
+3. Use styled-components for styling
+4. Export components as default or named exports consistently
+
+## Examples
+
+\`\`\`tsx
+import styled from "styled-components";
+
+type ButtonProps = {
+variant: "primary" | "secondary";
+children: React.ReactNode;
+};
+
+const StyledButton = styled.button<{ $variant: string }>`  // styles here`;
+
+export const Button = ({ variant, children }: ButtonProps) => {
+return <StyledButton $variant={variant}>{children}</StyledButton>;
+};
+\`\`\`
+```
+
+## TypeScript Best Practices
+
+### Strong Typing Guidelines
+
+1. **Always define prop types** for React components:
+
+```typescript
+type ButtonProps = {
+  variant: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
+  children: React.ReactNode;
+  onClick?: () => void;
+};
+
+const Button = ({ variant, size = "md", children, onClick }: ButtonProps) => {
+  // ...
+};
+```
+
+2. **Avoid `any` type** - use `unknown` when type is truly unknown:
+
+```typescript
+// Bad
+const data: any = fetchData();
+
+// Good
+const data: unknown = fetchData();
+if (isValidData(data)) {
+  // Type is narrowed here
+}
+```
+
+3. **Use type inference** where TypeScript can infer types:
+
+```typescript
+// Unnecessary
+const name: string = "John";
+
+// Better - TypeScript infers string
+const name = "John";
+```
+
+4. **Define API response types**:
+
+```typescript
+type User = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+type UsersResponse = {
+  users: User[];
+  total: number;
+};
+```
+
+5. **Use discriminated unions** for state:
+
+```typescript
+type LoadingState = { status: "loading" };
+type SuccessState<T> = { status: "success"; data: T };
+type ErrorState = { status: "error"; error: string };
+
+type AsyncState<T> = LoadingState | SuccessState<T> | ErrorState;
+```
+
+## Verification Checklist
+
+**All files are created automatically by `budi-kit new`.** After project creation, verify:
+
+### Quick Verification
+
+- [ ] Run `pnpm install` to install dependencies
+- [ ] Run `pnpm dev` to start development server
+- [ ] Visit `http://localhost:7700` - should display "Hello World" with project name
+- [ ] Visit `http://localhost:7700/dev/todo` (if todo system was included)
+
+### Files Created (All Automatic)
+
+**Configuration:**
+- ✅ `package.json`, `.gitignore`, `.npmrc`
+- ✅ `.prettierrc.json`, `.prettierignore`
+- ✅ `.env.example`, `eslint.config.mjs`
+- ✅ `next.config.ts`, `tsconfig.json`
+- ✅ `.husky/pre-commit`, `.husky/pre-push`
+
+**Application:**
+- ✅ `src/app/layout.tsx`, `src/app/page.tsx`
+- ✅ `src/app/not-found.tsx`, `src/app/loading.tsx`
+- ✅ `src/app/robots.ts`
+- ✅ `src/lib/registry.tsx`
+- ✅ `src/styles/main.css`
+- ✅ `src/types/index.ts`, `src/types/common.ts`
+- ✅ `src/components/index.ts`
+
+**Optional (if selected):**
+- ✅ Todo system files (`/dev/todo` route)
+- ✅ Sanity CMS files (`sanity.config.ts`, `/admin/studio`)
+- ✅ Cursor rules (`.cursor/rules/*.mdc`)
+
+## Post-Initialization Tasks
+
+### Use the Development Todo System (If Installed)
+
+If you chose to include the development todo system during setup, visit **`http://localhost:7700/dev/todo`** to access your client customization checklist. This interactive tool tracks all client-specific tasks including:
+
+- 🎨 **Branding & Design** - Colors, fonts, logos
+- 📝 **Content & Metadata** - Titles, descriptions, copy
+- 🖼️ **Assets & Media** - Favicons, OG images
+- ⚙️ **Configuration** - Environment variables, API setup
+- ✅ **Quality & Testing** - Accessibility, performance
+- 🚀 **Deployment** - Hosting, domain, SSL
+
+Progress is automatically saved to `.dev-todo.json` and shared with your team.
+
+**Note:** If you didn't include the todo system during setup but want to add it later, see `.cursor/rules/dev-todo-system.mdc` for setup instructions.
+
+### Key Customization Tasks
+
+1. **Customize branding** - Update colors in `main.css` (see client-customization-guide.mdc)
+2. **Add client fonts** - Configure Google Fonts or custom fonts in `layout.tsx`
+3. **Update metadata** - Edit `layout.tsx` with actual project info, domain, and descriptions
+4. **Add brand assets** - Place client logos in `/public/logos/`
+5. **Replace the icon** - Swap the generated `src/app/icon.svg` for the client icon (add `src/app/favicon.ico` and `src/app/apple-icon.png` if needed)
+6. **Customize the OG image** - Edit `src/app/opengraph-image.tsx`, or replace it with a 1200x630px `src/app/opengraph-image.png`
+7. **Configure environment** - Fill in any blank values in `.env.local` (created from `.env.example`)
+8. **Test accessibility** - Follow guidelines in accessibility-best-practices.mdc
+9. **Set up deployment** - Configure Vercel or other hosting platform
+10. **Add additional dependencies** as needed for your project
+
+### Available Documentation
+
+- **`.cursor/rules/client-customization-guide.mdc`** - Comprehensive client customization instructions
+- **`.cursor/rules/accessibility-best-practices.mdc`** - WCAG compliance and accessibility guidelines
+- **`.cursor/rules/dev-todo-system.mdc`** - Development todo system setup (optional)
+- **`.cursor/rules/77-projects-app-init.mdc`** - This initialization guide (for reference)
+
+### Remember
+
+If you included the development todo system, track your progress at `/dev/todo` as you work through client customizations. The checklist helps ensure nothing is missed before going live! 🚀

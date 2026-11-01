@@ -1,0 +1,61 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Component Structure
+
+## Description
+
+Rules for structuring components in the 77-projects repository.
+
+## Pattern
+
+**/components/**/\*.{js,jsx,ts,tsx}
+
+## Instructions
+
+1. Each component should have:
+   - A clear, descriptive name
+   - A focused purpose
+   - Proper TypeScript types
+   - Documentation in a README.md file
+   - Documentation in a .cursor directory for AI tools
+
+2. Component files should be organized as follows:
+   - Import statements at the top
+   - Component definition
+   - TypeScript types
+   - Export statement
+
+3. Complex components should be broken down into smaller, reusable components.
+
+4. Components should follow the project's design system guidelines.
+
+## Examples
+
+### Good Component Structure
+
+```jsx
+import React from 'react';
+import { SomeComponent } from 'some-package';
+
+type MyComponentProps = {
+  prop1: string;
+  prop2: React.JSXElement;
+}
+
+const MyComponent = ({ prop1, prop2 }: MyComponentProps) => {
+  // Component logic
+  return (
+    <div>
+      <SomeComponent prop1={prop1} />
+      {prop2}
+    </div>
+  );
+};
+
+
+export default MyComponent;
+```
