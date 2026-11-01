@@ -77,10 +77,10 @@ const Terminal = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 14px 16px 16px;
+  gap: 3px;
+  padding: 10px 12px 12px;
   color: ${PHOSPHOR};
-  font: 13px / 1.5 var(--lz-font-mono);
+  font: 12px / 1.45 var(--lz-font-mono);
   text-shadow: 0 0 6px rgb(57 255 20 / 0.6);
 
   /* CRT scanlines over the whole terminal. */
@@ -100,7 +100,7 @@ const Line = styled.p<{ $warn?: boolean }>`
 `;
 
 const Plain = styled.p`
-  margin: 8px 0 6px;
+  margin: 6px 0 4px;
   color: #c8ffbe;
   font-family: var(--lz-font-body);
   text-shadow: none;
@@ -110,13 +110,13 @@ const HackButton = styled.a`
   position: relative;
   z-index: 1;
   align-self: flex-start;
-  margin: 6px 0 4px;
-  padding: 8px 16px;
+  margin: 4px 0 2px;
+  padding: 6px 12px;
   border: 2px solid ${PHOSPHOR};
   background: rgb(57 255 20 / 0.08);
   box-shadow: 0 0 10px rgb(57 255 20 / 0.5), inset 0 0 10px rgb(57 255 20 / 0.25);
   color: ${PHOSPHOR};
-  font: bold 15px / 1.2 var(--lz-font-mono);
+  font: bold 13px / 1.2 var(--lz-font-mono);
   letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
@@ -164,8 +164,8 @@ const HackerInstall = () => (
       <Line $warn>&gt; W4RN1NG: N0 W3B 5T0R3 D3T3CT3D</Line>
       <Line>&gt; 4CC3SS L3V3L: 1337 ... GR4NT3D</Line>
       <Plain>
-        Don&apos;t need no stinkin&apos; web store? Grab the files from GitHub and load them into Chrome yourself with
-        Developer mode. Seven steps, about two minutes, zero coding.
+        Grab the files from GitHub and load them into Chrome yourself with Developer mode. Seven steps, about two
+        minutes, zero coding.
       </Plain>
       <HackButton href={MANUAL_INSTALL_URL}>[ Hackerz Only Install ]</HackButton>
       <Line aria-hidden="true">

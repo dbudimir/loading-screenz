@@ -6,8 +6,8 @@ import InstallButton from './InstallButton';
 
 const Section = styled.section`
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  gap: 56px;
   align-items: center;
   margin-top: 14px;
   padding: 26px 28px;
