@@ -13,7 +13,7 @@ The plan for getting Loading Screenz listed on the [Chrome Web Store](https://ch
 
 ## Before you submit: the video rights
 
-The built-in clips are copyrighted footage (Halo, Resident Evil, GTA: San Andreas, Crash Bandicoot, and the PlayStation 2, GameCube, Xbox, and Dreamcast startups). The store's policies prohibit distributing content you don't have rights to, and the listing names those games. Google may reject the submission or take it down later after a copyright complaint. The options:
+The built-in clips are copyrighted footage (Halo, Resident Evil, GTA: San Andreas, Crash Bandicoot, Star Wars Battlefront, and the PlayStation 2, GameCube, Xbox, and Dreamcast startups). The store's policies prohibit distributing content you don't have rights to, and the listing names those games. Google may reject the submission or take it down later after a copyright complaint. The options:
 
 - Get permission from the rights holders.
 - Ship only original or recreated loaders, and let people add their own clips through the library.
@@ -35,7 +35,7 @@ Registered in the [Developer Dashboard](https://chrome.google.com/webstore/devco
 pnpm zip
 ```
 
-This builds `loading-screenz.zip` (about 3 MB, 25 files) without the style guide or `.DS_Store` files. Version 1.1.0 was tested from the unzipped package: the popup and library pages load, all eight videos decode, and a link click plays the loading screen and then opens the link. The overlay also clears itself when a single-page app routes the link in-page, and when a link never loads a new page (like a download or an empty response).
+This builds `loading-screenz.zip` (about 3 MB, 25 files) without the style guide or `.DS_Store` files. Version 1.1.0 was tested from the unzipped package: the popup and library pages load, all the built-in videos decode, and a link click plays the loading screen and then opens the link. The overlay also clears itself when a single-page app routes the link in-page, and when a link never loads a new page (like a download or an empty response).
 
 For each later upload, bump `version` in `public/manifest.json` (and `package.json`) first.
 
@@ -88,8 +88,8 @@ Every click is a loading screen.
 
 Remember staring at loading screens and console startups, waiting for the game to begin? Loading Screenz brings them back. When you click a link, a classic loading screen plays for a few seconds before the next page opens.
 
-8 LEGENDARY SCREENS BUILT IN
-Game loading screens: Halo, Resident Evil, GTA: San Andreas, and Crash Bandicoot.
+9 LEGENDARY SCREENS BUILT IN
+Game loading screens: Halo, Resident Evil, GTA: San Andreas, Crash Bandicoot, and Star Wars Battlefront.
 Console startups: PlayStation 2, GameCube, Xbox, and Dreamcast.
 
 TOTAL CONTROL FROM THE TOOLBAR

@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 
 const FEATURES = [
-  '8 legendary screens built in',
+  '9 legendary screens built in',
   'Upload your own clips',
   'Pick one, or go Random',
   'Frequency dial: 1 to 100% of clicks',
@@ -12,10 +12,10 @@ const FEATURES = [
 ];
 
 const TRANSMISSIONS = [
+  { title: 'Star Wars Battlefront drops in', badge: 'New' },
   { title: 'Crash Bandicoot warps in', badge: 'New' },
-  { title: 'GTA: San Andreas joins the lineup', badge: 'New' },
+  { title: 'GTA: San Andreas joins the lineup', badge: null },
   { title: 'Resident Evil door now creaking', badge: null },
-  { title: 'Dreamcast startup goes pure white', badge: null },
   { title: 'Upload your own loading screens', badge: 'Hot' },
   { title: 'Rebuilt for modern Chrome', badge: null },
 ];

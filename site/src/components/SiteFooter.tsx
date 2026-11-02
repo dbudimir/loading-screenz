@@ -46,7 +46,7 @@ const Links = styled.nav`
 export const StatsTicker = () => (
   <Stats className="lz-ticker" role="marquee" aria-label="Stats">
     <span>
-      8 LEGENDARY SCREENS ··· 15 SECONDS MAX ··· 0 ACCOUNTS ··· 0 ADS ··· 100% LOCAL ··· UNLIMITED NOSTALGIA ··· NOW
+      9 LEGENDARY SCREENS ··· 15 SECONDS MAX ··· 0 ACCOUNTS ··· 0 ADS ··· 100% LOCAL ··· UNLIMITED NOSTALGIA ··· NOW
       LOADING ···
     </span>
   </Stats>

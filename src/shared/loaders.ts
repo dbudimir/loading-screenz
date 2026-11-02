@@ -33,6 +33,13 @@ export const BUILT_IN_LOADERS: Loader[] = [
     category: 'game',
     path: 'media/crash-bandicoot.mp4',
   },
+  {
+    id: 'star-wars-battlefront',
+    name: 'Star Wars Battlefront',
+    builtIn: true,
+    category: 'game',
+    path: 'media/star-wars-battlefront.mp4',
+  },
   { id: 'ps2', name: 'PlayStation 2', builtIn: true, category: 'console', path: 'media/ps2.mp4' },
   { id: 'gamecube', name: 'GameCube', builtIn: true, category: 'console', path: 'media/gamecube.mp4' },
   { id: 'xbox', name: 'Xbox', builtIn: true, category: 'console', path: 'media/xbox.mp4' },

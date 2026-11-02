@@ -24,6 +24,7 @@ const STILLS = {
   'resident-evil': 0.25,
   'gta-san-andreas': 0.45,
   'crash-bandicoot': 0.45,
+  'star-wars-battlefront': 0.12,
   ps2: 0.25,
   gamecube: 0.85,
   xbox: 0.65,
@@ -34,6 +35,7 @@ const GAMES = [
   ['resident-evil', 'Resident Evil'],
   ['gta-san-andreas', 'GTA: San Andreas'],
   ['crash-bandicoot', 'Crash Bandicoot'],
+  ['star-wars-battlefront', 'Star Wars Battlefront'],
 ];
 const CONSOLES = [
   ['ps2', 'PlayStation 2'],
@@ -185,12 +187,13 @@ const assets = {
       800,
       `.lineup { display: flex; flex-direction: column; gap: 16px; width: 1100px; box-sizing: border-box; padding: 22px 26px 26px; border-radius: 6px; }
        .lineup .lz-heading { font-size: 20px; }
-       .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+       .row { display: flex; justify-content: center; gap: 18px; }
+       .row .lz-tile { width: 190px; }
        .row .lz-tile-caption { font-size: 15px; }`
     )}<body class="lz-texture-space">
       <div class="stage">
         <div class="caption">
-          <h1 class="lz-display">8 legendary screens built in.</h1>
+          <h1 class="lz-display">9 legendary screens built in.</h1>
           <p class="lz-text">Add your own videos too. They stay on your computer.</p>
         </div>
         <div class="lineup lz-screen">

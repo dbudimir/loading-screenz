@@ -32,6 +32,12 @@ export const LOADERS: Loader[] = [
     blurb: 'Tumble down the warp tunnel with Crash. Whoa!',
   },
   {
+    id: 'star-wars-battlefront',
+    name: 'Star Wars Battlefront',
+    category: 'game',
+    blurb: 'From a distant galaxy down to Kashyyyk. The Clone Wars are one load away.',
+  },
+  {
     id: 'ps2',
     name: 'PlayStation 2',
     category: 'console',

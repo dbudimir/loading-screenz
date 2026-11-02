@@ -9,7 +9,7 @@ Website: [loadingscreenz.com](https://www.loadingscreenz.com)
 ## Features
 
 - Fullscreen loading video on link clicks, with a vignette over the top.
-- A library of loading screens: built-in Halo, Resident Evil, GTA: San Andreas, Crash Bandicoot, PlayStation 2, GameCube, Xbox, and Dreamcast videos to start, plus your own videos added from your computer.
+- A library of loading screens: built-in Halo, Resident Evil, GTA: San Andreas, Crash Bandicoot, Star Wars Battlefront, PlayStation 2, GameCube, Xbox, and Dreamcast videos to start, plus your own videos added from your computer.
 - Pick one loading screen in the popup or let it choose at random, with control over which videos are in the random rotation.
 - Adjustable frequency (how often it triggers) and duration (how long it lasts). The video's speed is adjusted so it plays through once in that time.
 - Doesn't break normal browsing: new-tab and modifier clicks, downloads, same-page anchors, and links that the site handles itself (single-page app routing) all behave normally.
@@ -120,6 +120,7 @@ These ship with the extension, so everyone who installs it starts with them in t
 | Resident Evil | `public/media/resident-evil.mp4` | 5.8s, 480p30, 46 KB | Door-opening animation by [VideoPie on YouTube](https://www.youtube.com/watch?v=ZNU29JfzKOI) |
 | GTA: San Andreas | `public/media/gta-san-andreas.mp4` | 15s, 720p30, 513 KB | Loading screen capture by [Charleezy on YouTube](https://www.youtube.com/watch?v=TllPuFVRKqc) |
 | Crash Bandicoot | `public/media/crash-bandicoot.mp4` | 15s, 720p30, 730 KB | The Wrath of Cortex loading screen capture by [NoahFuel Gaming on YouTube](https://www.youtube.com/watch?v=0RqI2x7Vq64) |
+| Star Wars Battlefront | `public/media/star-wars-battlefront.mp4` | 13.5s, 720p30 (4:3), 527 KB | Kashyyyk loading screen capture by [joemama1607 on YouTube](https://www.youtube.com/watch?v=9s-2olavSPc) |
 
 ### Console startups
 
@@ -288,7 +289,7 @@ The step-by-step store plan, with the listing text and permission justifications
 
 Before publishing, keep in mind:
 
-- The built-in videos (a fan recreation of the Halo CE loading screen, the Resident Evil door animation, the GTA: San Andreas and Crash Bandicoot loading screens, and captures of the PlayStation 2, GameCube, Xbox, and Dreamcast startups) aren't released under an open license. Get permission from the rights holders or replace them before distributing the extension publicly.
+- The built-in videos (a fan recreation of the Halo CE loading screen, the Resident Evil door animation, the GTA: San Andreas, Crash Bandicoot, and Star Wars Battlefront loading screens, and captures of the PlayStation 2, GameCube, Xbox, and Dreamcast startups) aren't released under an open license. Get permission from the rights holders or replace them before distributing the extension publicly.
 - The store will ask you to justify running on all sites (the `http://*/*` and `https://*/*` content script matches) and `unlimitedStorage` (for videos users add to their library), and to provide a privacy policy. The extension collects no data; settings stay in the browser's sync storage and uploaded videos stay on the user's computer.
 
 ## Troubleshooting
@@ -319,6 +320,7 @@ Code is licensed under BSD-3-Clause.
 - Resident Evil door-opening animation by [VideoPie](https://www.youtube.com/watch?v=ZNU29JfzKOI). Resident Evil is a trademark of Capcom.
 - GTA: San Andreas loading screen capture by [Charleezy](https://www.youtube.com/watch?v=TllPuFVRKqc). Grand Theft Auto is a trademark of Take-Two Interactive.
 - Crash Bandicoot: The Wrath of Cortex loading screen capture by [NoahFuel Gaming](https://www.youtube.com/watch?v=0RqI2x7Vq64). Crash Bandicoot is a trademark of Activision.
+- Star Wars Battlefront loading screen capture by [joemama1607](https://www.youtube.com/watch?v=9s-2olavSPc). Star Wars is a trademark of Lucasfilm Ltd.
 - PlayStation 2 startup capture by [politoed1](https://www.youtube.com/watch?v=YWWjTYlSp2M). PlayStation is a trademark of Sony Interactive Entertainment.
 - GameCube startup capture by [ploxyzero](https://www.youtube.com/watch?v=Fnz9ljn1cwE). GameCube is a trademark of Nintendo.
 - Xbox startup capture by [TroJan_Virus](https://www.youtube.com/watch?v=oADANrDGhoQ). Xbox is a trademark of Microsoft.

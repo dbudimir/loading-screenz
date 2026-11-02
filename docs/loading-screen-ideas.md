@@ -13,6 +13,7 @@ All of these are copyrighted footage. They're fine for a personal library, but b
 - [ ] **Skyrim:** a slowly rotating 3D model drifting through smoke.
 - [x] **Crash Bandicoot: The Wrath of Cortex:** Crash tumbling through the swirling "LOADING" tunnel.
 - [x] **GTA: San Andreas:** hand-painted artwork slides with the loading bar.
+- [x] **Star Wars Battlefront:** zooming from a galaxy down to Kashyyyk under the holographic "LOADING" ring.
 - [ ] **Destiny:** your ship flying through orbit.
 - [ ] **Assassin's Creed:** the white Animus void.
 - [ ] **The Sims:** the progress bar with joke messages like "Reticulating splines…"
@@ -44,6 +45,7 @@ All of these are copyrighted footage. They're fine for a personal library, but b
 | Resident Evil | Door-opening animation by [VideoPie](https://www.youtube.com/watch?v=ZNU29JfzKOI) |
 | GTA: San Andreas | Loading screen capture by [Charleezy](https://www.youtube.com/watch?v=TllPuFVRKqc) |
 | Crash Bandicoot | The Wrath of Cortex loading screen capture by [NoahFuel Gaming](https://www.youtube.com/watch?v=0RqI2x7Vq64) |
+| Star Wars Battlefront | Kashyyyk loading screen capture by [joemama1607](https://www.youtube.com/watch?v=9s-2olavSPc) |
 | PlayStation 2 | PS2 startup capture by [politoed1](https://www.youtube.com/watch?v=YWWjTYlSp2M) |
 | GameCube | GameCube startup capture by [ploxyzero](https://www.youtube.com/watch?v=Fnz9ljn1cwE) |
 | Xbox | Original Xbox startup capture by [TroJan_Virus](https://www.youtube.com/watch?v=oADANrDGhoQ) |
