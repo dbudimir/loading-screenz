@@ -104,8 +104,13 @@ const ItemText = styled.span`
   gap: 1px;
 `;
 
+const FEATURED_ID = 'xbox';
+const LINEUP_SIZE = 6;
+const featured = LOADERS.find(loader => loader.id === FEATURED_ID) ?? LOADERS[0];
+const lineup = [featured, ...LOADERS.filter(loader => loader !== featured)].slice(0, LINEUP_SIZE);
+
 const Hero = () => {
-  const [selected, setSelected] = useState(LOADERS[0]);
+  const [selected, setSelected] = useState(featured);
 
   return (
     <Screen id="top" className="lz-screen lz-texture-space">
@@ -135,7 +140,7 @@ const Hero = () => {
         <p className="lz-heading">
           The lineup <span className="lz-badge lz-badge--hot">Hot</span>
         </p>
-        {LOADERS.slice(0, 6).map(loader => (
+        {lineup.map(loader => (
           <LineupItem
             key={loader.id}
             type="button"
@@ -153,7 +158,7 @@ const Hero = () => {
           </LineupItem>
         ))}
         <a className="lz-fine" href="#screens">
-          + {LOADERS.length - 6} more in the gallery
+          + {LOADERS.length - lineup.length} more in the gallery
         </a>
       </Lineup>
     </Screen>
