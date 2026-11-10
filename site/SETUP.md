@@ -12,7 +12,7 @@ This site was generated with `budi-kit`'s project generator (base features only)
 
 ## Next steps
 
-- [ ] Publish the extension and set `NEXT_PUBLIC_INSTALL_URL` to its Chrome Web Store listing
+- [x] Publish the extension and set `NEXT_PUBLIC_INSTALL_URL` to its Chrome Web Store listing
 - [ ] Choose a domain and set `NEXT_PUBLIC_APP_URL`
 - [ ] Deploy on Vercel with Root Directory set to `site`
 - [ ] Get permission for the loading screen videos before launching publicly (see the extension README's publishing notes)
