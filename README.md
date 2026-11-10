@@ -20,7 +20,7 @@ Website: [loadingscreenz.com](https://www.loadingscreenz.com)
 
 There are three ways to install Loading Screenz:
 
-- **Chrome Web Store:** coming soon. The extension is in review.
+- **[Chrome Web Store](https://chromewebstore.google.com/detail/loading-screenz/medelcmlafacfcfeaankjjncofbhhnml):** install it in one click, free.
 - **[Install without the Chrome Web Store](#install-without-the-chrome-web-store):** download it from GitHub and load it yourself. Takes about two minutes and no coding.
 - **[Build from source](#build-from-source):** for developers who want to change the code.
 

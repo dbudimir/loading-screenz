@@ -7,9 +7,9 @@ The plan for getting Loading Screenz listed on the [Chrome Web Store](https://ch
 - [x] 1. Developer account set up
 - [x] 2. Upload package built and tested
 - [x] 3. Listing assets created (deploy the site so the privacy page is live before submitting)
-- [ ] 4. Item created and every dashboard tab filled in
-- [ ] 5. Submitted and approved
-- [ ] 6. Site and README pointed at the store listing
+- [x] 4. Item created and every dashboard tab filled in
+- [x] 5. Submitted and approved
+- [x] 6. Site and README pointed at the store listing
 
 ## Before you submit: the video rights
 
