@@ -13,7 +13,10 @@ const Screen = styled.section`
   padding: 16px;
 
   @media (max-width: 820px) {
-    grid-template-columns: 1fr;
+    /* Keep the desktop minmax(0, …) guard: a plain 1fr cannot shrink below the content's
+       min-content size, and the carousel track's is wide — the whole column would bleed
+       off the right edge of the screen. */
+    grid-template-columns: minmax(0, 1fr);
   }
 `;
 
@@ -69,6 +72,9 @@ const Lineup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* A grid item holding a horizontal scroller must be allowed to shrink to the track,
+     or its content's min-content size forces the hero column wider than the screen. */
+  min-width: 0;
 `;
 
 /* Invisible on desktop, where the items just stack. On mobile it becomes the carousel track:
