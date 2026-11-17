@@ -5,7 +5,9 @@ export type Loader = {
   blurb: string;
 };
 
-// Mirrors BUILT_IN_LOADERS in the extension (../src/shared/loaders.ts). Videos come from public/media/<id>.mp4.
+// Mirrors BUILT_IN_LOADERS in the extension (../src/shared/loaders.ts). Served from /media/<id>.mp4 —
+// on the site those are H.264 renditions of the extension's AV1 masters, with a WebP poster still each
+// (see scripts/sync-assets.mjs), because Safari cannot decode AV1.
 export const LOADERS: Loader[] = [
   {
     id: 'halo',
@@ -49,3 +51,5 @@ export const LOADERS: Loader[] = [
 ];
 
 export const loaderSrc = (id: string) => `/media/${id}.mp4`;
+
+export const loaderPoster = (id: string) => `/media/${id}.webp`;

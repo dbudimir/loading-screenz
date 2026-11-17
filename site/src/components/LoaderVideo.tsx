@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { loaderSrc } from '@/lib/loaders';
+import { loaderPoster, loaderSrc } from '@/lib/loaders';
 
 type LoaderVideoProps = {
   id: string;
@@ -36,11 +36,23 @@ const LoaderVideo = ({ id, name, autoPlay = false }: LoaderVideoProps) => {
     else video.addEventListener('loadedmetadata', () => showStill(video), { once: true });
   }, [autoPlay]);
 
+  // autoPlay is controlled: when a tile loses selection it should come to rest, not keep playing.
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    if (autoPlay) video.play().catch(() => {});
+    else if (!video.paused) {
+      video.pause();
+      showStill(video);
+    }
+  }, [autoPlay]);
+
   return (
     <video
       ref={ref}
       key={id}
       src={loaderSrc(id)}
+      poster={loaderPoster(id)}
       aria-label={`${name} loading screen`}
       muted
       loop
