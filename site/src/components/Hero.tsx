@@ -71,6 +71,26 @@ const Lineup = styled.div`
   gap: 6px;
 `;
 
+/* Invisible on desktop, where the items just stack. On mobile it becomes the carousel track:
+   a horizontal snap scroller, so the lineup reads as swipeable cards instead of a tall column. */
+const LineupTrack = styled.div`
+  display: contents;
+
+  @media (max-width: 820px) {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* Vertical room so the active card's glow isn't clipped; the next card peeks in as a swipe hint. */
+    padding: 6px 2px 10px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+`;
+
 const LineupItem = styled.button<{ $active: boolean }>`
   display: grid;
   grid-template-columns: 74px 1fr;
@@ -95,6 +115,13 @@ const LineupItem = styled.button<{ $active: boolean }>`
 
   .lz-tile-frame::after {
     display: none;
+  }
+
+  @media (max-width: 820px) {
+    flex: 0 0 62%;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    scroll-snap-align: start;
   }
 `;
 
@@ -140,23 +167,31 @@ const Hero = () => {
         <p className="lz-heading">
           The lineup <span className="lz-badge lz-badge--hot">Hot</span>
         </p>
-        {lineup.map(loader => (
-          <LineupItem
-            key={loader.id}
-            type="button"
-            $active={loader.id === selected.id}
-            aria-pressed={loader.id === selected.id}
-            onClick={() => setSelected(loader)}
-          >
-            <span className="lz-tile-frame">
-              <LoaderVideo id={loader.id} name={loader.name} />
-            </span>
-            <ItemText>
-              <span className="lz-heading">{loader.name}:</span>
-              <span className="lz-fine">{loader.blurb}</span>
-            </ItemText>
-          </LineupItem>
-        ))}
+        <LineupTrack>
+          {lineup.map(loader => (
+            <LineupItem
+              key={loader.id}
+              type="button"
+              $active={loader.id === selected.id}
+              aria-pressed={loader.id === selected.id}
+              onClick={e => {
+                setSelected(loader);
+                // In the mobile carousel, settle the tapped card fully into view.
+                if (window.matchMedia('(max-width: 820px)').matches) {
+                  e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                }
+              }}
+            >
+              <span className="lz-tile-frame">
+                <LoaderVideo id={loader.id} name={loader.name} autoPlay={loader.id === selected.id} />
+              </span>
+              <ItemText>
+                <span className="lz-heading">{loader.name}:</span>
+                <span className="lz-fine">{loader.blurb}</span>
+              </ItemText>
+            </LineupItem>
+          ))}
+        </LineupTrack>
         <a className="lz-fine" href="#screens">
           + {LOADERS.length - lineup.length} more in the gallery
         </a>
