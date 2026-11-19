@@ -37,6 +37,25 @@ body {
   margin: 0;
 }
 
+/* Fixed page background: the theme paints the page gradient on body.lz-page,
+   which stretches it across the full document height, so the gradient scrolls
+   along with the content. Move it to a viewport-fixed layer behind the page
+   so the background stays put while the content scrolls over it.
+   (background-attachment: fixed is unreliable on iOS Safari, hence the fixed
+   pseudo-element.) Site-only: the extension keeps the theme's own .lz-page. */
+body.lz-page {
+  background: none;
+}
+
+body.lz-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--lz-page-bg);
+  pointer-events: none;
+}
+
 a {
   color: inherit;
 }
