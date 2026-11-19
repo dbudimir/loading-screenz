@@ -15,7 +15,9 @@ const LAST_UPDATED = 'November 1, 2026';
 const pageStyle: CSSProperties = {
   maxWidth: '760px',
   margin: '0 auto',
-  padding: '28px var(--site-gutter) 0',
+  // Design spacing plus safe-area insets (see the home page's pageStyle).
+  padding:
+    'calc(28px + env(safe-area-inset-top, 0px)) calc(var(--site-gutter) + env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) calc(var(--site-gutter) + env(safe-area-inset-left, 0px))',
 };
 
 const screenStyle: CSSProperties = {
