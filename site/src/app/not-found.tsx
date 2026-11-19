@@ -5,7 +5,9 @@ const pageStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   minHeight: '100dvh',
-  padding: '20px',
+  // Design spacing plus safe-area insets (see the home page's pageStyle).
+  padding:
+    'calc(20px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) calc(20px + env(safe-area-inset-left, 0px))',
 };
 
 const screenStyle: CSSProperties = {

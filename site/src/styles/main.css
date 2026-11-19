@@ -47,9 +47,15 @@ body {
    along with the content. Move it to a viewport-fixed layer behind the page
    so the background stays put while the content scrolls over it.
    (background-attachment: fixed is unreliable on iOS Safari, hence the fixed
-   pseudo-element.) Site-only: the extension keeps the theme's own .lz-page. */
+   pseudo-element.) Site-only: the extension keeps the theme's own .lz-page.
+   The body still carries the gradient's mid-stop color underneath: it is the
+   canvas color browsers sample for overscroll and chrome, and with
+   viewport-fit: cover the fixed layer (inset: 0) is what paints the full
+   screen, edge to edge. min-height uses dvh so the page tracks the visible
+   viewport as mobile toolbars expand and collapse. */
 body.lz-page {
-  background: none;
+  background-color: #e9ece9;
+  min-height: 100dvh;
 }
 
 body.lz-page::before {

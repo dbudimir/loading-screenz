@@ -48,6 +48,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  // Full bleed: lay out to the full screen (under the Dynamic Island and
+  // home indicator) so the page background reaches every edge. Content
+  // keeps clear of those areas via env(safe-area-inset-*) padding.
+  viewportFit: 'cover',
   // Matches the page background (--lz-page-bg mid stop), not the dark screen
   // panel: iOS Safari paints the status-bar and home-indicator areas with
   // this color, so a dark value shows up as black bars top and bottom.
