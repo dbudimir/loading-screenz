@@ -48,7 +48,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0b1220',
+  // Matches the page background (--lz-page-bg mid stop), not the dark screen
+  // panel: iOS Safari paints the status-bar and home-indicator areas with
+  // this color, so a dark value shows up as black bars top and bottom.
+  themeColor: '#e9ece9',
 };
 
 export default function RootLayout({

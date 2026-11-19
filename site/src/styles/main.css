@@ -25,6 +25,11 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 16px;
+  /* Backdrop for overscroll and browser-chrome sampling, matched to the
+     page gradient's mid stop (--lz-page-bg). The gradient itself lives on
+     the fixed body::before layer below; this keeps the areas outside the
+     page the same light gray instead of black. */
+  background-color: #e9ece9;
 }
 
 html,
